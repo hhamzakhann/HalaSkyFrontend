@@ -7,15 +7,13 @@ import { Divider } from "antd";
 import LinkButton from "@/app/_components/LinkButton";
 import ButtonCustom from "@/app/_components/Button";
 import Media from "@/app/_components/Media";
+import { MonthPicker } from "@/app/_components/MonthPicker";
 
 export default function Page() {
   return (
     <>
       <DashboardHeader title="Customer Support & Help Desk">
-        <ButtonCustom className="ml-auto">
-          <img src="/edit-icon.svg" />
-          Create Warning Template
-        </ButtonCustom>
+        <MonthPicker classWrapper="ml-auto" />
       </DashboardHeader>
       <DashboardMainContainer>
         <div className="divide-slate-300 flex flex-col md:flex-row items-center justify-between">

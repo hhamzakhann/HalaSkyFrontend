@@ -1,3 +1,200 @@
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { DashboardHeader } from "@/app/_components/UI";
+import DashboardMainContainer from "@/app/_components/UI/DashboardMainContainer";
+import Image from "next/image";
+import userProfileImage from "@/public/user-profile-image.png";
+import { Tag } from "antd";
+import Pagination from "@/app/_components/Pagination";
+
+const userData = [
+  {
+    id: "01",
+    profileImage: (
+      <div>
+        <Image src={userProfileImage} />
+      </div>
+    ),
+    name: "Briana Lawrance",
+    email: "briana01@gmail.com",
+    registrationData: "5/30/14",
+    accountStatus: "active",
+  },
+  {
+    id: "02",
+    profileImage: (
+      <div>
+        <Image src={userProfileImage} />
+      </div>
+    ),
+    name: "Briana Lawrance",
+    email: "briana01@gmail.com",
+    registrationData: "5/30/14",
+    accountStatus: "active",
+  },
+  {
+    id: "03",
+    profileImage: (
+      <div>
+        <Image src={userProfileImage} />
+      </div>
+    ),
+    name: "Briana Lawrance",
+    email: "briana01@gmail.com",
+    registrationData: "5/30/14",
+    accountStatus: "in-active",
+  },
+  {
+    id: "04",
+    profileImage: (
+      <div>
+        <Image src={userProfileImage} />
+      </div>
+    ),
+    name: "Briana Lawrance",
+    email: "briana01@gmail.com",
+    registrationData: "5/30/14",
+    accountStatus: "active",
+  },
+  {
+    id: "05",
+    profileImage: (
+      <div>
+        <Image src={userProfileImage} />
+      </div>
+    ),
+    name: "Briana Lawrance",
+    email: "briana01@gmail.com",
+    registrationData: "5/30/14",
+    accountStatus: "active",
+  },
+  {
+    id: "06",
+    profileImage: (
+      <div>
+        <Image src={userProfileImage} />
+      </div>
+    ),
+    name: "Briana Lawrance",
+    email: "briana01@gmail.com",
+    registrationData: "5/30/14",
+    accountStatus: "active",
+  },
+  {
+    id: "07",
+    profileImage: (
+      <div>
+        <Image src={userProfileImage} />
+      </div>
+    ),
+    name: "Briana Lawrance",
+    email: "briana01@gmail.com",
+    registrationData: "5/30/14",
+    accountStatus: "active",
+  },
+  {
+    id: "08",
+    profileImage: (
+      <div>
+        <Image src={userProfileImage} />
+      </div>
+    ),
+    name: "Briana Lawrance",
+    email: "briana01@gmail.com",
+    registrationData: "5/30/14",
+    accountStatus: "active",
+  },
+  {
+    id: "09",
+    profileImage: (
+      <div>
+        <Image src={userProfileImage} />
+      </div>
+    ),
+    name: "Briana Lawrance",
+    email: "briana01@gmail.com",
+    registrationData: "5/30/14",
+    accountStatus: "active",
+  },
+];
+
 export default function Page() {
-  return <div>Profile page</div>;
+  return (
+    <>
+      <DashboardHeader title="User Profile" />
+      <DashboardMainContainer>
+        <Pagination />
+        <div className="border border-gray-200 rounded-xl overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-blueDark text-white hover:bg-blueDark">
+                <TableHead className="text-white py-4 px-6">Id</TableHead>
+                <TableHead className="text-white py-4 px-6">
+                  Profile Image
+                </TableHead>
+                <TableHead className="text-white py-4 px-6">Name</TableHead>
+                <TableHead className="text-white py-4 px-6">Email</TableHead>
+                <TableHead className="text-white py-4 px-6">
+                  Registration date
+                </TableHead>
+                <TableHead className="text-white py-4 px-6">
+                  Account status
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {userData.map((data) => (
+                <TableRow key={data.id}>
+                  <TableCell className="py-4 px-6">{data.id}</TableCell>
+                  <TableCell className="py-4 px-6">
+                    {data.profileImage}
+                  </TableCell>
+                  <TableCell className="py-4 px-6">{data.name}</TableCell>
+                  <TableCell className="py-4 px-6">{data.email}</TableCell>
+                  <TableCell className="py-4 px-6">
+                    {data.registrationData}
+                  </TableCell>
+                  <TableCell className="py-4 px-6 ">
+                    {data.accountStatus === "active" ? (
+                      <Tag
+                        color="green"
+                        style={{
+                          paddingInline: "8px",
+                          paddingBlock: "10px",
+                          border: "none",
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        Active
+                      </Tag>
+                    ) : (
+                      <Tag
+                        color="red"
+                        style={{
+                          paddingInline: "8px",
+                          paddingBlock: "10px",
+                          border: "none",
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        Banned
+                      </Tag>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </DashboardMainContainer>
+    </>
+  );
 }

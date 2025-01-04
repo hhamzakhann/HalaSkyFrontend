@@ -6,6 +6,15 @@ import { UserOutlined, TeamOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { spartanFont } from "../font";
+import Image from "next/image";
+
+import DashboardIcon from "@/public/dashboard-icon.svg";
+import EditIcon from "@/public/edit-icon.svg";
+import promotionIcon from "@/public/promotion-icon.svg";
+import chatIcon from "@/public/chat-icon.svg";
+import guardIcon from "@/public/guard-icon.svg";
+import settingIcon from "@/public/setting-icon.svg";
+import helpIcon from "@/public/help-icon.svg";
 
 const { Sider } = Layout;
 
@@ -17,10 +26,10 @@ function MenuSidebar() {
   return (
     <Sider
       onCollapse={(value) => setCollapsed(value)}
-      className="!w-full !min-w-full !max-w-full !bg-transparent"
+      className="!w-full !min-w-full !max-w-full !max-h-full !bg-transparent !grow flex flex-col"
     >
       <Menu
-        className={`h-full !bg-transparent !border-0 !text-lg`}
+        className={`!max-h-full !bg-transparent !border-0 !text-lg overflow-auto`}
         defaultSelectedKeys={["1"]}
         mode="inline"
         selectedKeys={[pathname]}
@@ -28,7 +37,7 @@ function MenuSidebar() {
           {
             key: "/dashboard",
             className: `${spartanFont.className}`,
-            icon: <UserOutlined />,
+            icon: <Image src={DashboardIcon} alt="dashboard icon" />,
             label: <Link href="/dashboard">Dashboard</Link>,
           },
           {
@@ -63,7 +72,7 @@ function MenuSidebar() {
           },
           {
             key: "content-management",
-            icon: <TeamOutlined />,
+            icon: <Image src={EditIcon} alt="edit icon" />,
             label: "Content",
             className: `${spartanFont.className}`,
             children: [
@@ -96,7 +105,7 @@ function MenuSidebar() {
           {
             key: "/dashboard/promotion-discount-management",
             className: `${spartanFont.className}`,
-            icon: <TeamOutlined />,
+            icon: <Image src={promotionIcon} alt="promotion icon" />,
             label: (
               <Link href="/dashboard/promotion-discount-management">
                 Promotion & Discount Management
@@ -106,7 +115,7 @@ function MenuSidebar() {
           {
             key: "help desk",
             className: `${spartanFont.className}`,
-            icon: <TeamOutlined />,
+            icon: <Image src={chatIcon} alt="chat icon" />,
             label: "Customer Support",
             children: [
               {
@@ -122,8 +131,12 @@ function MenuSidebar() {
                 label: <Link href="#">Live Chat Assistance</Link>,
               },
               {
-                key: "faqs-managment",
-                label: <Link href="#">Automated FAQ Management</Link>,
+                key: "/dashboard/faq-management",
+                label: (
+                  <Link href="/dashboard/faq-management">
+                    Automated FAQ Management
+                  </Link>
+                ),
               },
               {
                 key: "feedback",
@@ -134,7 +147,7 @@ function MenuSidebar() {
           {
             key: "privacy",
             className: `${spartanFont.className}`,
-            icon: <TeamOutlined />,
+            icon: <Image src={guardIcon} alt="privacy icon" />,
             label: "Security & Privacy Management",
             children: [
               {
@@ -154,6 +167,18 @@ function MenuSidebar() {
                 label: <Link href="#">Data Privacy Compliance</Link>,
               },
             ],
+          },
+          {
+            key: "/setting",
+            className: `${spartanFont.className}`,
+            icon: <Image src={settingIcon} alt="setting icon" />,
+            label: <Link href="/setting">Setting</Link>,
+          },
+          {
+            key: "/help",
+            className: `${spartanFont.className}`,
+            icon: <Image src={helpIcon} alt="help icon" />,
+            label: <Link href="/help">Help</Link>,
           },
         ]}
       />
