@@ -4,7 +4,7 @@ import planeGrayIcon from "@/public/plane-gray-icon.svg";
 
 export default function SearchFlightDetail() {
   return (
-    <div className="py-8  ">
+    <div className="py-8 ">
       <div>
         <div>
           <p>
