@@ -59,8 +59,10 @@ export function TableCustom({ headerData = [] }) {
     <Table>
       <TableHeader>
         <TableRow>
-          {headerData.map((data) => (
-            <TableHead className="w-[100px]">{data}</TableHead>
+          {headerData.map((data, indx) => (
+            <TableHead className="w-[100px]" key={indx}>
+              {data}
+            </TableHead>
           ))}
           {/* <TableHead className="w-[100px]">Invoice</TableHead>
           <TableHead>Status</TableHead>
