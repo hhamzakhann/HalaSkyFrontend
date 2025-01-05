@@ -12,7 +12,7 @@ export default function ButtonCustom({
   const base = "w-full ";
 
   const varientStyle = {
-    accent: base + "!bg-accent !border !border-secondary ",
+    accent: base + "!bg-accent !border !bg-accent ",
     secondary: base + "!bg-secondary !text-white",
     gray: base + "!bg-lightGray text-white",
     danger: base + "!bg-danger text-white",

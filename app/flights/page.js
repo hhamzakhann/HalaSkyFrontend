@@ -20,10 +20,10 @@ export const metadata = {
 export default function Page() {
   return (
     <div className="bg-[#F7FAFA] min-h-[100vh]">
-      <div className="border-b border-slate-200">
+      <div className="border-b border-slate-200 bg-[#F7FAFA]">
         <Navigation varient="main-nav" />
       </div>
-      <div className="border-b border-slate-200">
+      <div className="border-b border-slate-200 mb-8">
         <Container className=" !p-0">
           <div className="grid grid-cols-[1fr_1fr]  md:grid-cols-[1fr_1fr_1fr_2fr_2fr_auto]">
             <div className="search-flight-item px-3 py-2 md:px-4 md:py-3 space-y-2">
@@ -96,7 +96,6 @@ export default function Page() {
                 <ButtonCustom
                   className="w-full mb-3"
                   varient="accent"
-                  shape="round"
                   size="large"
                 >
                   <span>Set Alert</span>
@@ -115,7 +114,11 @@ export default function Page() {
               <p className="mb-4 text-sm font-medium text-slate-400">
                 24 Result Found
               </p>
-              <FlightDetailCard />
+              <div className="space-y-8">
+                <FlightDetailCard />
+                <FlightDetailCard />
+                <FlightDetailCard />
+              </div>
             </div>
           </div>
         </section>
