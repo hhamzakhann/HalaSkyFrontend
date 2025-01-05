@@ -1,9 +1,9 @@
 import Image from "next/image";
-import Box from "./Box";
-import { HiOutlineHeart, HiOutlineArrowsRightLeft } from "react-icons/hi2";
 import Rating from "./Rating";
+import LikeButton from "./LikeButton";
+import ShareButton from "./ShareButton";
 
-export default function TrendingHotelsCard() {
+export default function HotelsCard() {
   return (
     <figure>
       <div className="relative w-full aspect-square">
@@ -14,12 +14,8 @@ export default function TrendingHotelsCard() {
           alt="Trening hotel image"
         />
         <div className="absolute top-4 right-4 space-x-3">
-          <Box varient="roundedFull">
-            <HiOutlineArrowsRightLeft />
-          </Box>
-          <Box varient="roundedFull">
-            <HiOutlineHeart />
-          </Box>
+          <ShareButton />
+          <LikeButton />
         </div>
       </div>
       <figcaption className="py-4 space-y-2 relative">

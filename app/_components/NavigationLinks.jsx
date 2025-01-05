@@ -13,7 +13,7 @@ export default function NavigationLinks() {
           <Link href="/flights">Flight</Link>
         </li>
         <li>
-          <Link href="/hotel">Hotel</Link>
+          <Link href="/hotels">Hotel</Link>
         </li>
         <li>
           <Link href="/account">Community</Link>

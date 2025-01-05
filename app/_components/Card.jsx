@@ -1,5 +1,5 @@
 export default function Card({ varient, className, borderd, children }) {
-  const baseClasses = "bg-white rounded-xl shadow-md ";
+  const baseClasses = "bg-white rounded-2xl shadow-md ";
 
   const varientStyle = {
     small: baseClasses + "p-2 ",
