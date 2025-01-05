@@ -104,7 +104,7 @@ const userData = [
     id: "08",
     profileImage: (
       <div>
-        <Image src={userProfileImage} />
+        <Image src={userProfileImage} alt="user profile" />
       </div>
     ),
     name: "Briana Lawrance",
@@ -116,7 +116,7 @@ const userData = [
     id: "09",
     profileImage: (
       <div>
-        <Image src={userProfileImage} />
+        <Image src={userProfileImage} alt="user profile" />
       </div>
     ),
     name: "Briana Lawrance",

@@ -7,7 +7,6 @@ export default function AirlineInfo({ children }) {
     <div className="px-3 p-2 rounded-full bg-[#005F730D]">
       <div className="flex items-center gap-3">
         <Avatar>
-          {/* <AvatarImage src={emiratesImage} alt="emirates image icon" /> */}
           <Image src={emiratesImage} alt="emirates image icon" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
