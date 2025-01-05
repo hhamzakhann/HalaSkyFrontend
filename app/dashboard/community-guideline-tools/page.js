@@ -41,10 +41,10 @@ export default function Page() {
               <figure className="space-y-4">
                 <img src="/image-skeleton.jpg" />
                 <figcaption className="text-sm font-light text-slate-600">
-                  It's not only writers who can benefit from this free online
-                  tool. If you're a programmer who's working on a project where
+                  Its not only writers who can benefit from this free online
+                  tool. If youre a programmer whos working on a project where
                   blocks of text are needed, this tool can be a great way to get
-                  that. It's a good way to test your programming and that the
+                  that. Its a good way to test your programming and that the
                   tool being
                 </figcaption>
                 <div className="grid md:grid-cols-[80fr_20fr] gap-3">
@@ -85,10 +85,10 @@ export default function Page() {
               <figure className="space-y-4">
                 {/* <img src="/image-skeleton.jpg" /> */}
                 <figcaption className="text-sm font-light text-slate-600">
-                  It's not only writers who can benefit from this free online
-                  tool. If you're a programmer who's working on a project where
+                  Its not only writers who can benefit from this free online
+                  tool. If youre a programmer whos working on a project where
                   blocks of text are needed, this tool can be a great way to get
-                  that. It's a good way to test your programming and that the
+                  that. Its a good way to test your programming and that the
                   tool being
                 </figcaption>
                 <div className="grid md:grid-cols-[80fr_20fr] gap-3">
@@ -129,10 +129,10 @@ export default function Page() {
               <figure className="space-y-4">
                 <img src="/image-skeleton.jpg" />
                 <figcaption className="text-sm font-light text-slate-600">
-                  It's not only writers who can benefit from this free online
-                  tool. If you're a programmer who's working on a project where
+                  Its not only writers who can benefit from this free online
+                  tool. If youre a programmer whos working on a project where
                   blocks of text are needed, this tool can be a great way to get
-                  that. It's a good way to test your programming and that the
+                  that. Its a good way to test your programming and that the
                   tool being
                 </figcaption>
                 <div className="grid md:grid-cols-[80fr_20fr] gap-3">
@@ -173,10 +173,10 @@ export default function Page() {
               <figure className="space-y-4">
                 {/* <img src="/image-skeleton.jpg" /> */}
                 <figcaption className="text-sm font-light text-slate-600">
-                  It's not only writers who can benefit from this free online
-                  tool. If you're a programmer who's working on a project where
+                  Its not only writers who can benefit from this free online
+                  tool. If youre a programmer whos working on a project where
                   blocks of text are needed, this tool can be a great way to get
-                  that. It's a good way to test your programming and that the
+                  that. Its a good way to test your programming and that the
                   tool being
                 </figcaption>
                 <div className="grid md:grid-cols-[80fr_20fr] gap-3">
@@ -217,10 +217,10 @@ export default function Page() {
               <figure className="space-y-4">
                 <img src="/image-skeleton.jpg" />
                 <figcaption className="text-sm font-light text-slate-600">
-                  It's not only writers who can benefit from this free online
-                  tool. If you're a programmer who's working on a project where
+                  Its not only writers who can benefit from this free online
+                  tool. If youre a programmer whos working on a project where
                   blocks of text are needed, this tool can be a great way to get
-                  that. It's a good way to test your programming and that the
+                  that. Its a good way to test your programming and that the
                   tool being
                 </figcaption>
                 <div className="grid md:grid-cols-[80fr_20fr] gap-3">
@@ -261,10 +261,10 @@ export default function Page() {
               <figure className="space-y-4">
                 <img src="/image-skeleton.jpg" />
                 <figcaption className="text-sm font-light text-slate-600">
-                  It's not only writers who can benefit from this free online
-                  tool. If you're a programmer who's working on a project where
+                  Its not only writers who can benefit from this free online
+                  tool. If youre a programmer whos working on a project where
                   blocks of text are needed, this tool can be a great way to get
-                  that. It's a good way to test your programming and that the
+                  that. Its a good way to test your programming and that the
                   tool being
                 </figcaption>
                 <div className="grid md:grid-cols-[80fr_20fr] gap-3">
@@ -305,10 +305,10 @@ export default function Page() {
               <figure className="space-y-4">
                 <img src="/image-skeleton.jpg" />
                 <figcaption className="text-sm font-light text-slate-600">
-                  It's not only writers who can benefit from this free online
-                  tool. If you're a programmer who's working on a project where
+                  Its not only writers who can benefit from this free online
+                  tool. If youre a programmer whos working on a project where
                   blocks of text are needed, this tool can be a great way to get
-                  that. It's a good way to test your programming and that the
+                  that. Its a good way to test your programming and that the
                   tool being
                 </figcaption>
                 <div className="grid md:grid-cols-[80fr_20fr] gap-3">
@@ -349,10 +349,10 @@ export default function Page() {
               <figure className="space-y-4">
                 <img src="/image-skeleton.jpg" />
                 <figcaption className="text-sm font-light text-slate-600">
-                  It's not only writers who can benefit from this free online
-                  tool. If you're a programmer who's working on a project where
+                  Its not only writers who can benefit from this free online
+                  tool. If youre a programmer whos working on a project where
                   blocks of text are needed, this tool can be a great way to get
-                  that. It's a good way to test your programming and that the
+                  that. Its a good way to test your programming and that the
                   tool being
                 </figcaption>
                 <div className="grid md:grid-cols-[80fr_20fr] gap-3">

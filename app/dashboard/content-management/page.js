@@ -31,11 +31,11 @@ export default function Page() {
                   <p
                     className={`${poppinsFont.className} font-light text-sm text-slate-600 leading-7`}
                   >
-                    It's not only writers who can benefit from this free online
-                    tool. If you're a programmer who's working on a project
-                    where blocks of text are needed, this tool can be a great
-                    way to get that. It's a good way to test your programming
-                    and that the tool being
+                    Its not only writers who can benefit from this free online
+                    tool. If youre a programmer whos working on a project where
+                    blocks of text are needed, this tool can be a great way to
+                    get that. Its a good way to test your programming and that
+                    the tool being
                   </p>
                 </div>
                 <p className="mt-auto font-light text-sm">
@@ -92,11 +92,11 @@ export default function Page() {
                   <p
                     className={`${poppinsFont.className} font-light text-sm text-slate-600 leading-7`}
                   >
-                    It's not only writers who can benefit from this free online
-                    tool. If you're a programmer who's working on a project
-                    where blocks of text are needed, this tool can be a great
-                    way to get that. It's a good way to test your programming
-                    and that the tool being
+                    Its not only writers who can benefit from this free online
+                    tool. If youre a programmer whos working on a project where
+                    blocks of text are needed, this tool can be a great way to
+                    get that. Its a good way to test your programming and that
+                    the tool being
                   </p>
                 </div>
                 <p className="mt-auto font-light text-sm">
@@ -153,11 +153,11 @@ export default function Page() {
                   <p
                     className={`${poppinsFont.className} font-light text-sm text-slate-600 leading-7`}
                   >
-                    It's not only writers who can benefit from this free online
-                    tool. If you're a programmer who's working on a project
-                    where blocks of text are needed, this tool can be a great
-                    way to get that. It's a good way to test your programming
-                    and that the tool being
+                    Its not only writers who can benefit from this free online
+                    tool. If youre a programmer whos working on a project where
+                    blocks of text are needed, this tool can be a great way to
+                    get that. Its a good way to test your programming and that
+                    the tool being
                   </p>
                 </div>
                 <p className="mt-auto font-light text-sm">
@@ -214,11 +214,11 @@ export default function Page() {
                   <p
                     className={`${poppinsFont.className} font-light text-sm text-slate-600 leading-7`}
                   >
-                    It's not only writers who can benefit from this free online
-                    tool. If you're a programmer who's working on a project
-                    where blocks of text are needed, this tool can be a great
-                    way to get that. It's a good way to test your programming
-                    and that the tool being
+                    Its not only writers who can benefit from this free online
+                    tool. If youre a programmer whos working on a project where
+                    blocks of text are needed, this tool can be a great way to
+                    get that. Its a good way to test your programming and that
+                    the tool being
                   </p>
                 </div>
                 <p className="mt-auto font-light text-sm">
