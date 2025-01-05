@@ -4,7 +4,7 @@ import planeGrayIcon from "@/public/plane-gray-icon.svg";
 
 export default function SearchFlightDetail() {
   return (
-    <div className="py-8  bg-[url('/globe-bg.svg')] bg-no-repeat	bg-top">
+    <div className="py-8  bg-[url("/globe-bg.svg")] bg-no-repeat	bg-top">
       <div>
         <div>
           <p>
