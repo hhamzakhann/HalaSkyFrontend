@@ -1,4 +1,4 @@
-import React from "react";
+import Image from "next/image";
 import Container from "./Container";
 
 export default function CallToAppSection() {
@@ -19,8 +19,12 @@ export default function CallToAppSection() {
           </p>
           <p>Available now</p>
           <div className="flex flex-col items-center gap-2  sm:flex-row">
-            <img className="w-28 sm:w-40" src="/google-play-icon.svg" alt="" />
-            <img className="w-28 sm:w-40" src="/appleStore-icon.svg" alt="" />
+            <Image
+              className="w-28 sm:w-40"
+              src="/google-play-icon.svg"
+              alt=""
+            />
+            <Image className="w-28 sm:w-40" src="/appleStore-icon.svg" alt="" />
           </div>
         </div>
         <div className="flex justify-center md:justify-end">
