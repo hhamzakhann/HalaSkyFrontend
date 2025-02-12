@@ -6,10 +6,12 @@ import SectionTreasure from "@/app/_components/SectionTreasure";
 import PollSection from "./_components/PollSection";
 import CallToAppSection from "./_components/CallToAppSection";
 import Footer from "./_components/Footer";
+import Navigation from "./_components/Navigation";
 
 export default function Page() {
   return (
     <>
+      <Navigation />
       <HeroSection />
       <TrendingHotels />
       <TrendingDestinations />

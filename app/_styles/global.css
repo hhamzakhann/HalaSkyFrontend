@@ -22,6 +22,10 @@
   }
 }
 
+.hero-section {
+  min-height: calc(100vh - 80px);
+}
+
 .search-flight-item {
   border: 0.5px solid rgb(226, 232, 240);
   border-bottom: 0;

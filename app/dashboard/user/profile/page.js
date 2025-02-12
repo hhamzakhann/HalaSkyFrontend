@@ -14,6 +14,8 @@ import Image from "next/image";
 import userProfileImage from "@/public/user-profile-image.png";
 import { Tag } from "antd";
 import Pagination from "@/app/_components/Pagination";
+import { SelectInputShad } from "@/app/_components/formControls/SelectInputShad";
+import SearchInput from "@/app/_components/formControls/SearchInput";
 
 const userData = [
   {
@@ -126,12 +128,34 @@ const userData = [
   },
 ];
 
+const filterData = [
+  { label: "Active", value: "active" },
+  { label: "Banned", value: "banned" },
+];
+
 export default function Page() {
   return (
     <>
       <DashboardHeader title="User Profile" />
       <DashboardMainContainer>
-        <Pagination />
+        <div className="flex ">
+          <div className="flex">
+            <SearchInput size="small" />
+            <SelectInputShad
+              placeholder="Select filter option"
+              data={filterData}
+            />
+          </div>
+          <div className="ml-auto">
+            <SelectInputShad
+              placeholder="1"
+              data={[
+                { label: "1", value: 1 },
+                { label: "2", value: 2 },
+              ]}
+            />
+          </div>
+        </div>
         <div className="border border-gray-200 rounded-xl overflow-hidden">
           <Table>
             <TableHeader>
