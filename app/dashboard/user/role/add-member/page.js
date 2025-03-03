@@ -2,7 +2,7 @@ import { DashboardHeader } from "@/app/_components/UI";
 import DashboardMainContainer from "@/app/_components/UI/DashboardMainContainer";
 import Image from "next/image";
 
-import LeftArrowIcon from "@/public/LeftArrow-icon.svg";
+import LeftArrowIcon from "@/public/leftArrow-icon.svg";
 
 import AddMember from "@/app/_components/forms/AddMember";
 import { getRoles } from "@/app/_lib/data-service";
@@ -15,7 +15,7 @@ export default async function Page() {
     <div>
       <DashboardHeader
         title="Add Member"
-        btnChild={<Image src={LeftArrowIcon} />}
+        btnChild={<Image src={LeftArrowIcon} alt="navigation icon" />}
       />
       <DashboardMainContainer>
         <div>
