@@ -20,7 +20,6 @@ const { Sider } = Layout;
 
 function MenuSidebar() {
   const pathname = usePathname();
-  console.log(pathname);
   const [collapsed, setCollapsed] = useState(false);
 
   return (

@@ -8,6 +8,7 @@ export default function ButtonCustom({
   onClick,
   children,
   type,
+  htmlType = "button",
 }) {
   const base = "w-full ";
 
@@ -20,11 +21,14 @@ export default function ButtonCustom({
 
   return (
     <Button
+      htmlType={htmlType}
       type={type}
       shape={shape}
       size={size}
       onClick={onClick}
-      className={`${varientStyle[varient]} ${className}`}
+      className={`${varientStyle[varient]} ${className} ${
+        varient === "iconBtn" && "!border-none !p-0"
+      }`}
     >
       {children}
     </Button>

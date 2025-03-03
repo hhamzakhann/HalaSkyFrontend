@@ -1,3 +1,4 @@
 import PromotionDiscForm from "./PromotionDiscForm";
+import EditRoleAssignment from "./EditRoleAssignment";
 
-export { PromotionDiscForm };
+export { PromotionDiscForm, EditRoleAssignment };

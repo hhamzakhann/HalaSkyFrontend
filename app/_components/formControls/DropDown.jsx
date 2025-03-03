@@ -3,7 +3,6 @@ import { UserOutlined } from "@ant-design/icons";
 import { Button, Dropdown, message, Space } from "antd";
 const handleMenuClick = (e) => {
   message.info("Click on menu item.");
-  console.log("click", e);
 };
 const items = [
   {

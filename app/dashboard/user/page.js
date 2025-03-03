@@ -2,11 +2,12 @@ import DropDown from "@/app/_components/formControls/DropDown";
 import SearchInput from "@/app/_components/formControls/SearchInput";
 import { DashboardHeader } from "@/app/_components/UI";
 import UserTable from "@/app/_features/users/UserTable";
+import { auth } from "@/app/_lib/auth";
 import { DownOutlined, FilterOutlined } from "@ant-design/icons";
 
 export const metadata = { title: "Users" };
 
-export default function Page() {
+export default async function Page() {
   return (
     <div>
       <DashboardHeader title="User Profile" />

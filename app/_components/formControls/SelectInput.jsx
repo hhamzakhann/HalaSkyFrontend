@@ -12,9 +12,7 @@ export default function SelectInput({
   label = "",
   labelClasses = "",
 }) {
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-  };
+  const handleChange = (value) => {};
   return (
     <div className="flex flex-col">
       {label && (

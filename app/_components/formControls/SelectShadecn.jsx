@@ -23,7 +23,9 @@ export default function SelectShadecn({
       <SelectContent>
         <SelectGroup>
           {options.map((option) => (
-            <SelectItem value={option.value}>{option.label}</SelectItem>
+            <SelectItem value={option.value} key={option.value}>
+              {option.label}
+            </SelectItem>
           ))}
         </SelectGroup>
       </SelectContent>

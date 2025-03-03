@@ -1,6 +1,8 @@
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import "@/app/_styles/global.css";
 import { poppinsFont } from "./font";
+import { Toaster } from "react-hot-toast";
+import { AuthProvider } from "./provider";
 
 // import { Poppins, League_Spartan } from "next/font/google";
 
@@ -30,7 +32,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${poppinsFont.className}`}>
         <main>
-          <AntdRegistry>{children}</AntdRegistry>
+          <Toaster />
+          <AntdRegistry>
+            <AuthProvider>{children}</AuthProvider>
+          </AntdRegistry>
         </main>
       </body>
     </html>

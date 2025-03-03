@@ -18,7 +18,9 @@ export function SelectInputShad({ placeholder, data = [], className }) {
       <SelectContent>
         <SelectGroup>
           {data.map((item) => (
-            <SelectItem value={item.value}>{item.label}</SelectItem>
+            <SelectItem value={item.value} key={item.value}>
+              {item.label}
+            </SelectItem>
           ))}
         </SelectGroup>
       </SelectContent>
