@@ -4,45 +4,163 @@ import planeGrayIcon from "@/public/plane-gray-icon.svg";
 import landingPlanIcon from "@/public/landing-plan-icon.svg";
 import luggageBagIcon from "@/public/luggageBag-icon.svg";
 import { Tag } from "antd";
+import { getAirportInfo } from "@/app/_lib/utils";
 
-export default function SearchFlightDetail() {
+import { format, parse } from "date-fns";
+import { parseISO, differenceInMinutes } from "date-fns";
+import { zonedTimeToUtc } from "date-fns-tz";
+import { utcToZonedTime } from "date-fns-tz";
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return format(date, "EEE, d MMM"); // Example: "Sun, 20 Aug"
+}
+
+// function formateTime(timeString) {
+//   const parsedTime = parse(timeString, "HH:mm:ssXXX", new Date());
+//   return format(parsedTime, "HH:mm");
+// }
+
+function formatFlightDurations(flights) {
+  return flights.map((flight) => {
+    const departureTime = parseISO(`2024-01-01T${flight.departure.time}`);
+    const arrivalTime = parseISO(`2024-01-01T${flight.arrival.time}`);
+
+    // Convert to UTC
+    const utcDeparture = utcToZonedTime(departureTime, "UTC");
+    const utcArrival = utcToZonedTime(arrivalTime, "UTC");
+
+    // Calculate difference in minutes
+    const diffMinutes = Math.abs(differenceInMinutes(utcArrival, utcDeparture));
+
+    // Convert to hours and minutes
+    const hours = Math.floor(diffMinutes / 60);
+    const minutes = diffMinutes % 60;
+
+    return { id: flight.id, duration: `${hours}hr ${minutes}min` };
+  });
+}
+
+const calcFlightTransists = function ({ schedule }) {
+  if (schedule.length === 1) return "One way";
+
+  const isSameAllFlightNum = schedule
+    .map((sch) => sch.carrier.operatingFlightNumber)
+    .every((num, i, arr) => num === arr[0]);
+
+  if (isSameAllFlightNum && schedule.length > 1) return "Direct Flight 🛫";
+  if (!isSameAllFlightNum && schedule.length > 1)
+    return `${schedule.length} Transits`;
+};
+
+export default function SearchFlightDetail({
+  flight,
+  flightDesc,
+  internaryIndex,
+  internaryList,
+}) {
+  console.log("asdfasdf", flight, flightDesc[0]);
+
+  let totalBaggage = 0;
+  let seatsRemaining = 0;
+
+  function calcBaggage(legIndex) {
+    flight?.passengerPriceDetail.forEach((passDetail, index) => {
+      const baggage = passDetail.passengerList.forEach((passenger, index) => {
+        totalBaggage =
+          passenger.baggageInformation[legIndex].detail.weight || 0;
+      });
+    });
+    return totalBaggage;
+  }
+
+  function formatFlightDurations(flights) {
+    return flights.map((flight) => {
+      // Parse the ISO time, including time zone offset
+      const departureTime = parseISO(`2024-01-01T${flight.departure.time}`);
+      const arrivalTime = parseISO(`2024-01-01T${flight.arrival.time}`);
+
+      // Calculate difference in minutes
+      const diffMinutes = Math.abs(
+        differenceInMinutes(arrivalTime, departureTime)
+      );
+
+      // Convert minutes into hours and minutes
+      const hours = Math.floor(diffMinutes / 60);
+      const minutes = diffMinutes % 60;
+
+      return { id: flight.id, duration: `${hours}hr ${minutes}min` };
+    });
+  }
+
   return (
-    <div className=" w-2/3 mx-auto divide-y">
-      <div className="flex items-center justify-between py-8 pt-20">
-        <div className="flex flex-col gap-1 items-end">
-          <p className="flex items-center gap-2 font-normal text-xs text-gray">
-            <Image src={planeGrayIcon} alt="depart plane icon" />
-            <span>From</span>
-          </p>
-          <p className="font-normal text-xl">Jakarta</p>
-          <p className="flex items-center gap-2 font-normal text-xs">
-            <span className="text-gray">Sun, 20 Aug</span>
-            <span className="text-gray">&bull;</span>
-            <span>08:35</span>
-          </p>
+    <div className="  mx-auto divide-y">
+      <div className=" py-8 pt-20 px-8">
+        <div className="grid grid-cols-[35%_30%_35%] gap-y-14">
+          {flightDesc[0].legDescriptions.map((desc, index) => (
+            <>
+              <div className="flex flex-col gap-1 place-items-end">
+                <p className="flex items-center gap-2 font-normal text-xs text-gray">
+                  <Image src={planeGrayIcon} alt="depart plane icon" />
+                  <span>From</span>
+                </p>
+                <p className="font-normal text-xl">
+                  {getAirportInfo(desc.departureLocation)?.name}
+                </p>
+                <p className="flex items-center gap-2 font-normal text-xs">
+                  <span className="text-gray">
+                    {formatDate(desc.departureDate)}
+                  </span>
+                  <span className="text-gray">&bull;</span>
+                  {/* <span>{formateTime(schedule.departure.time)}</span> */}
+                </p>
+              </div>
+              <div className="flex flex-col items-center justify-center">
+                <p className="text-xs font-normal">
+                  {
+                    formatFlightDurations(flight.legList[index].schedule).at(
+                      index
+                    ).duration
+                  }
+                </p>
+                <p className="text-xs font-normal space-y-6">
+                  <span>Direct</span>
+                  <span>&bull;</span>
+                  <span>{calcFlightTransists(flight.legList[index])}</span>
+                </p>
+                <p className="text-xs font-normal space-y-6">Airline</p>
+              </div>
+              <div className="flex flex-col gap-1 ">
+                <p className="flex items-center gap-2 font-normal text-xs text-gray">
+                  <Image src={landingPlanIcon} alt="landing plane icon" />
+                  <span>To</span>
+                </p>
+                <p className="font-normal text-xl">
+                  {getAirportInfo(desc.arrivalLocation)?.name}
+                </p>
+                <p className="flex items-center gap-2 font-normal text-xs">
+                  <span className="text-gray">-----</span>
+                  <span className="text-gray">&bull;</span>
+                  <span>{/* {formateTime(schedule.arrival.time)} */}</span>
+                </p>
+              </div>
+              <div className="flex items-center justify-center gap-2 font-normal text-sm col-span-full">
+                <p>One Stops</p>
+                <div className="basis-52 flex items-center justify-center gap-3">
+                  <Image src={luggageBagIcon} alt="Luggage bag icon" />
+                  <span>Total : {calcBaggage(index)}Kg</span>
+                </div>
+                <Tag
+                  bordered={false}
+                  color="red"
+                  className="text-sm font-normal"
+                >
+                  {seatsRemaining} Seats Left
+                </Tag>
+              </div>
+            </>
+          ))}
         </div>
-        <div className="flex flex-col gap-1 items-start">
-          <p className="flex items-center gap-2 font-normal text-xs text-gray">
-            <Image src={landingPlanIcon} alt="landing plane icon" />
-            <span>To</span>
-          </p>
-          <p className="font-normal text-xl">Hanoi</p>
-          <p className="flex items-center gap-2 font-normal text-xs">
-            <span className="text-gray">Sun, 20 Aug</span>
-            <span className="text-gray">&bull;</span>
-            <span>08:35</span>
-          </p>
-        </div>
-      </div>
-      <div className="flex items-center justify-center gap-2 py-8 font-normal text-sm">
-        <p>One Stop</p>
-        <div className="basis-52 flex items-center justify-center gap-3">
-          <Image src={luggageBagIcon} alt="Luggage bag icon" />
-          <span>Total : 20Kg</span>
-        </div>
-        <Tag bordered={false} color="red" className="text-sm font-normal">
-          2 Seats Left
-        </Tag>
       </div>
     </div>
   );

@@ -1,35 +1,68 @@
 import { BASE_URL } from "@/constant/constant";
+import { handleSignOut } from "./action";
 import { auth } from "./auth";
 
 // getting user profile listing.
-export async function getUserProfiles() {
+export async function getUserProfiles(statusId) {
   const session = await auth();
-  console.log("USER TOKEN", session.token);
 
-  const formdata = new FormData();
-  formdata.append("pageNo", "1");
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${session.user.token}`);
+  myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+  const urlencoded = new URLSearchParams();
+  // if (statusId) {
+  urlencoded.append("status", statusId);
+  // }
+  urlencoded.append("pageNo", "1");
 
   const requestOptions = {
     method: "POST",
-    body: formdata,
+    headers: myHeaders,
+    body: urlencoded,
     redirect: "follow",
-    Authorization: `Bearer ${session.token}`,
   };
 
-  try {
-    const response = await fetch(`${BASE_URL}/user/activeUser`, requestOptions);
-    console.log("ACTUAL RESP", response);
-    const data = await response.json();
-    console.log("RESP DATA", data);
-  } catch (error) {
-    console.error("RESP ERROR", error);
+  const response = await fetch(`${BASE_URL}/user/list`, requestOptions);
+
+  const data = await response.json();
+
+  if (data.status) {
+    return data.activeUsers;
+  }
+}
+
+export async function getBanUnbanUsers() {
+  const session = await auth();
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${session.user.token}`);
+  myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+  const urlencoded = new URLSearchParams();
+  urlencoded.append("pageNo", "1");
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: urlencoded,
+    redirect: "follow",
+  };
+
+  const response = await fetch(
+    `${BASE_URL}/user/user-violation-list`,
+    requestOptions
+  );
+  const data = await response.json();
+
+  if (data.status) {
+    return data.data;
   }
 }
 
 export async function getRoleMember() {
   const session = await auth();
   const myHeaders = new Headers();
-  myHeaders.append("Authorization", `Bearer ${session.token}`);
+  myHeaders.append("Authorization", `Bearer ${session.user.token}`);
   myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
   const urlencoded = new URLSearchParams();
@@ -61,7 +94,7 @@ export async function getRoleMember() {
 export async function getRoles() {
   const session = await auth();
   const myHeaders = new Headers();
-  myHeaders.append("Authorization", `Bearer ${session.token}`);
+  myHeaders.append("Authorization", `Bearer ${session.user.token}`);
 
   const requestOptions = {
     method: "GET",
@@ -87,7 +120,7 @@ export async function getRoles() {
 export async function addMember(newMember) {
   const session = await auth();
   const myHeaders = new Headers();
-  myHeaders.append("Authorization", `Bearer ${session.token}`);
+  myHeaders.append("Authorization", `Bearer ${session.user.token}`);
   myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
   const { name, email, role } = newMember;
@@ -115,7 +148,7 @@ export async function addMember(newMember) {
 export async function updateUserRole(newMember) {
   const session = await auth();
   const myHeaders = new Headers();
-  myHeaders.append("Authorization", `Bearer ${session.token}`);
+  myHeaders.append("Authorization", `Bearer ${session.user.token}`);
   myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
   const { name, email, role } = newMember;
@@ -137,4 +170,143 @@ export async function updateUserRole(newMember) {
     .then((response) => response.text())
     .then((result) => console.log(result))
     .catch((error) => console.error(error));
+}
+
+export async function getBlogs(pageNo) {
+  const session = await auth();
+
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${session.user.token}`);
+  myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+  const urlencoded = new URLSearchParams();
+  // if (statusId) urlencoded.append("status", statusId);
+  urlencoded.append("pageNo", pageNo);
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: urlencoded,
+    redirect: "follow",
+  };
+
+  try {
+    const response = await fetch(`${BASE_URL}/blog/list`, requestOptions);
+    const data = await response.json();
+    if (data.status) {
+      return data.data;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getPostComments() {
+  const session = await auth();
+
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${session.user.token}`);
+  myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+  const urlencoded = new URLSearchParams();
+  urlencoded.append("pageNo", "1");
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: urlencoded,
+    redirect: "follow",
+  };
+
+  const response = await fetch(`${BASE_URL}/activity/list`, requestOptions);
+
+  const data = await response.json();
+  if (data.status) {
+    return data.data;
+  }
+}
+
+export async function getFaqs() {
+  const session = await auth();
+
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${session.user.token}`);
+
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
+  };
+
+  const response = await fetch(`${BASE_URL}/faq/list`, requestOptions);
+
+  const data = await response.json();
+  return data;
+}
+
+export async function getHotels({
+  cityCode,
+  countryCode,
+  checkIn,
+  checkout,
+  adult,
+  children,
+  childAges,
+}) {
+  const session = await auth();
+
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${session.user.token}`);
+  myHeaders.append("Content-Type", "application/json");
+
+  const raw = JSON.stringify({
+    checkIn: checkIn,
+    checkOut: checkout,
+    cityCode,
+    countryCode,
+    rooms: [
+      {
+        Adults: Number(adult),
+        Children: Number(children),
+        ChildAges: Array.from({ length: children }, (_, i) =>
+          Math.floor(Math.random() * (7 - 4) + 4)
+        ).join(","),
+      },
+    ],
+  });
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  const response = await fetch(`${BASE_URL}/hotel/get`, requestOptions);
+  if (response.status === 401) await handleSignOut();
+  const data = await response.json();
+  return data;
+}
+
+export async function getFlights(requestData) {
+  const session = await auth();
+
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${session.user.token}`);
+  myHeaders.append("Content-Type", "application/json");
+
+  const jsonRequest = JSON.stringify(requestData);
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: jsonRequest,
+    redirect: "follow",
+  };
+
+  const response = await fetch(`${BASE_URL}/flight/get`, requestOptions);
+  const data = await response.json();
+  return data;
+
+  // throw new Error("Something went wrong while getting flights");
 }

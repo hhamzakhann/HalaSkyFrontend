@@ -13,16 +13,32 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useEffect } from "react";
 
 export function DatePickerWithRange({
   className,
   calenderIcon = false,
   bordered = false,
+  defaultDate = {},
+  onSetDate,
 }) {
-  const [date, setDate] = useState({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
-  });
+  // const [date, setDate] = useState(() => {
+  //   const from = new Date(defaultDate.from);
+  //   const to = new Date(defaultDate.to);
+  //   return { from, to };
+  // });
+
+  const [date, setDate] = useState({});
+
+  useEffect(() => {
+    const from = new Date(defaultDate.from || Date.now);
+    const to = new Date(defaultDate.to || Date.now);
+    setDate({ from, to });
+  }, []);
+
+  const handleDateSelect = function ({ from, to }) {
+    console.log(from, to);
+  };
 
   return (
     <div>
@@ -61,7 +77,10 @@ export function DatePickerWithRange({
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={setDate}
+            onSelect={(value) => {
+              setDate(value);
+              onSetDate(value);
+            }}
             numberOfMonths={2}
           />
         </PopoverContent>

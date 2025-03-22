@@ -7,7 +7,7 @@ import trashIcon from "@/public/trash-icon.svg";
 
 export default function DeleteMemberBtn() {
   return (
-    <ButtonCustom varient="iconBtn" onClick={() => console.log("HI")}>
+    <ButtonCustom varient="iconBtn">
       <Image src={trashIcon} alt="trash icon" />
     </ButtonCustom>
   );

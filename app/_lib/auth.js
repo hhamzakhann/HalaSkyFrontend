@@ -32,7 +32,7 @@ export const {
 
         const parsedCrediential = signInSchema.safeParse({ email, password });
         if (!parsedCrediential.success) {
-          console.error("Invalid credential", parsedCrediential.error.errors);
+          console.error("Invalid credential", parsedCrediential);
           return null;
         }
 
@@ -55,13 +55,14 @@ export const {
           requestOptions
         );
 
-        if (!resp.ok) return null;
-        const data = await resp.json();
+        if (!resp.ok || resp.status === 401) return null;
 
-        console.log("CONSOLE FROM AUTH.JS", data);
+        const data = await resp.json();
+        if (!data.status)
+          throw new Error(data.error || "Invalid identifier or password");
 
         user = {
-          id: data.user.id.toString(), // Ensure ID is a string
+          id: String(data.user.id), // Ensure ID is a string
           name: data.user.name, // Use name if available, otherwise email
           email: data.user.email,
           token: data.token, // Store JWT token from API if needed
@@ -83,12 +84,20 @@ export const {
         token.token = user.token; // Add token
         token.name = user.name; // Add name
         token.email = user.email; // Add email
+        token.role = user.Roles;
       }
       return token;
     },
     async session({ session, token }) {
       // Pass the token from the JWT to the session object
-      session.token = token.token;
+
+      session.user = {
+        id: token.id, // Ensure ID is included
+        name: token.name,
+        email: token.email,
+        token: token.token, // Pass the token if needed
+      };
+      // session.token = token.token;
       return session;
     },
     authorized({ auth, request: { nextUrl } }) {
@@ -100,9 +109,10 @@ export const {
       }
       return !!auth;
     },
-    // jwt({ token, user }) {
-    //   console.log("JWT", token, user);
-    // },
+    async redirect({ url, baseUrl }) {
+      if (url === "/api/auth/login") return baseUrl; // Default redirect
+      return url;
+    },
   },
   pages: {
     signIn: "/login/admin",

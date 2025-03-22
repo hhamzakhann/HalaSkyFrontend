@@ -1,8 +1,9 @@
+import BtnSignout from "@/app/_components/actionButtons/BtnSignout";
 import { auth } from "@/app/_lib/auth";
 
 export default async function UserInfo() {
   const session = await auth();
-  // console.log("USER INFO SESSION", session);
+
   const username = session?.user?.name;
   const userEmail = session?.user?.email;
   const userImage = session?.user?.image;
@@ -22,6 +23,9 @@ export default async function UserInfo() {
           {userEmail}
         </p>
       </div>
+      <BtnSignout redirect="/login/admin">
+        <Image src={logoutIcon} alt="logout icon" className="cursor-pointer" />
+      </BtnSignout>
     </div>
   );
 }

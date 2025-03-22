@@ -4,7 +4,12 @@ import ButtonCustom from "./Button";
 
 export default function LikeButton({ onClick }) {
   return (
-    <ButtonCustom shape="circle" onClick={onClick}>
+    <ButtonCustom
+      type="roundedWhite"
+      className="w-10 h-10 shadow-lg"
+      variant="icon"
+      onClick={onClick}
+    >
       <HiOutlineHeart />
     </ButtonCustom>
   );

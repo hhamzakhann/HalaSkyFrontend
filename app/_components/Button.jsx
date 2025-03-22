@@ -1,36 +1,47 @@
-import { Button } from "antd";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 export default function ButtonCustom({
-  varient,
+  variant,
   className,
-  shape,
-  size = "large",
+  size = undefined,
   onClick,
   children,
   type,
   htmlType = "button",
+  isPending = false,
+  shape,
 }) {
   const base = "w-full ";
 
   const varientStyle = {
-    accent: base + "!bg-accent !border !bg-accent ",
+    primary: base + "bg-blue hover:bg-blue/90",
+    success: base + "bg-success hover:bg-success/90",
+    accent: base + "bg-accent hover:bg-accent/90 text-black",
     secondary: base + "!bg-secondary !text-white",
     gray: base + "!bg-lightGray text-white",
     danger: base + "!bg-danger text-white",
+    roundedWhite: base + "rounded-full border-none bg-white",
   };
 
   return (
     <Button
+      type={htmlType}
       htmlType={htmlType}
-      type={type}
-      shape={shape}
       size={size}
+      shape={shape}
       onClick={onClick}
-      className={`${varientStyle[varient]} ${className} ${
-        varient === "iconBtn" && "!border-none !p-0"
-      }`}
+      variant={variant}
+      className={`${varientStyle[type]} ${className}`}
     >
-      {children}
+      {isPending ? (
+        <>
+          <Loader2 className="animate-spin" />
+          Please wait
+        </>
+      ) : (
+        children
+      )}
     </Button>
   );
 }

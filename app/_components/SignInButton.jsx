@@ -2,7 +2,7 @@ import ButtonCustom from "./Button";
 
 export default function SignInButton() {
   return (
-    <ButtonCustom varient="accent" shape="round">
+    <ButtonCustom type="accent" className="rounded-full border-none">
       Sign in
     </ButtonCustom>
   );

@@ -21,6 +21,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInSchema } from "@/app/_lib/zod";
 import { handleCredientialSignIn } from "@/app/_lib/action";
+import { toast } from "react-hot-toast";
 
 export default function Page() {
   const form = useForm({
@@ -33,11 +34,15 @@ export default function Page() {
 
   const onSubmit = async function (data) {
     try {
-      const resp = await handleCredientialSignIn(data);
-      console.log("RESP", resp);
-    } catch (error) {
-      console.log("Unexpected error");
-    }
+      const resp = await handleCredientialSignIn({
+        ...data,
+        redirectTo: "/dashboard/user/profile",
+      });
+
+      if (resp.errorType === "credentials") {
+        toast.error(resp.message);
+      }
+    } catch (error) {}
   };
   return (
     <div className="h-screen w-full bg-lightGray1 flex items-center justify-center">
@@ -95,33 +100,11 @@ export default function Page() {
                   Forgot password?
                 </Link>
               </div>
-              <ButtonCustom htmlType="submit" varient="accent">
+              <ButtonCustom htmlType="submit" type="accent">
                 Login
               </ButtonCustom>
             </form>
           </Form>
-          {/* <div className="space-y-6">
-            <Input placeholder="Email" type="email" />
-            <PasswordInput />
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Checkbox id="terms" />
-                <label
-                  htmlFor="terms"
-                  className="text-base font-light leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Remember password
-                </label>
-              </div>
-              <Link
-                href="/forgot-password"
-                className="text-base font-light text-slate-500"
-              >
-                Forgot password?
-              </Link>
-            </div>
-            <ButtonCustom varient="accent">Login</ButtonCustom>
-          </div> */}
         </div>
       </div>
     </div>

@@ -7,64 +7,145 @@ import ButtonCustom from "@/app/_components/Button";
 import googleIcon from "@/public/google-icon.svg";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import { BASE_URL } from "@/constant/constant";
 import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
+import { handleUserSignUp } from "@/app/_lib/action";
+import { useState } from "react";
+import { useTransition } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signUpSchema } from "@/app/_lib/zod";
+import { InputOTPShad } from "../UI/InputOTP";
+import { useRegister } from "@/app/_contexts/RegisterContext";
+import { useEffect } from "react";
 
 export default function RegisterForm() {
+  const [submitError, setSubmitError] = useState(null);
+  const [isSubmittedSuccess, setIsSubmittedSuccess] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const { setUserEmailToRegister } = useRegister();
   const router = useRouter();
-  const { handleSubmit, register } = useForm();
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+    watch,
+    getValues,
+  } = useForm({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      name: "",
+      number: undefined,
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
 
-  const onSubmit = async function (data) {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+  useEffect(() => {
+    const email = getValues("email");
 
-    const urlencoded = new URLSearchParams();
-    urlencoded.append("email", data.email);
-    urlencoded.append("password", data.password);
-    urlencoded.append("name", data.name);
-    urlencoded.append("number", data.number);
+    if (email) setUserEmailToRegister(email);
+  }, [watch("email")]);
 
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: urlencoded,
-      redirect: "follow",
-    };
+  const onSubmit = (data) => {
+    startTransition(async () => {
+      try {
+        const result = await handleUserSignUp(data);
 
-    try {
-      const resp = await fetch(`${BASE_URL}/auth/register`, requestOptions);
-      if (!resp.ok) toast.error("Something went wrong.");
+        if (!result.status) toast.error(result.message);
 
-      const data = await resp.json();
-      if (data.status === false) {
-        toast.error(data.message);
-        return;
+        if (result.status) {
+          reset(); // Reset form
+          toast.success(result.message);
+          setIsSubmittedSuccess(true);
+        } else {
+          setSubmitError(result.error);
+        }
+      } catch (error) {
+        setSubmitError("An unexpected error occurred. Please try again.");
+        console.error(error);
       }
-
-      if (data.status) {
-        toast.success(data.message);
-        router.push("/verify-password");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    });
   };
+
+  //     if (data.status) {
+  //       toast.success(data.message);
+  //       router.push("/verify-password");
   return (
-    <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-      <Input placeholder="Name" type="text" {...register("name")} />
-      <Input placeholder="Number" type="number" {...register("number")} />
-      <Input placeholder="Email" type="email" {...register("email")} />
-      <PasswordInput register={register} name="password" />
-      <PasswordInput placeholder="Confirm Password" />
-      <div className="space-y-4">
-        <ButtonCustom varient="accent" htmlType="submit">
-          Sign Up
-        </ButtonCustom>
-        <ButtonCustom className="w-full">
-          <img src={googleIcon} />
-          <span>Login with Google</span>
-        </ButtonCustom>
-      </div>
-    </form>
+    <>
+      {!isSubmittedSuccess ? (
+        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            <Input placeholder="Name" type="text" {...register("name")} />
+            {errors.name && (
+              <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>
+            )}
+          </div>
+          <div>
+            <Input placeholder="Number" type="number" {...register("number")} />
+            {errors.number && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.number.message}
+              </p>
+            )}
+          </div>
+          <div>
+            <Input placeholder="Email" type="email" {...register("email")} />
+            {errors.email && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.email.message}
+              </p>
+            )}
+          </div>
+          <div>
+            <PasswordInput register={register} name="password" />
+            {errors.password && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+          <div>
+            <PasswordInput
+              register={register}
+              name="confirmPassword"
+              placeholder="Confirm Password"
+            />
+            {errors.confirmPassword && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.confirmPassword.message}
+              </p>
+            )}
+          </div>
+          {submitError && (
+            <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+              {submitError}
+            </div>
+          )}
+          <div className="space-y-4">
+            <ButtonCustom type="accent" htmlType="submit">
+              {isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing Up...
+                </>
+              ) : (
+                "Sign Up"
+              )}
+            </ButtonCustom>
+            <ButtonCustom
+              variant="outline"
+              className="w-full hover:bg-transparent"
+            >
+              <img src={googleIcon} />
+              <span>Login with Google</span>
+            </ButtonCustom>
+          </div>
+        </form>
+      ) : (
+        <InputOTPShad />
+      )}
+    </>
   );
 }

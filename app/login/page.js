@@ -1,14 +1,9 @@
 import BgImage from "@/public/loginBgImage.jpg";
-import Logo from "../_components/Logo";
 import Image from "next/image";
-import { PasswordInput } from "../_components/formControls/PasswordInput";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
-import ButtonCustom from "../_components/Button";
-import googleIcon from "@/public/google-icon.svg";
 import Container from "../_components/Container";
-import { handleGoogleSignIn } from "../_lib/action";
+import UserLoginForm from "../_components/forms/UserLoginForm";
+import Logo from "../_components/Logo";
 
 export default function Page() {
   return (
@@ -35,34 +30,7 @@ export default function Page() {
                 Please enter your details
               </p>
               <div className="space-y-6">
-                <Input placeholder="Email" type="email" />
-                <PasswordInput />
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="terms" />
-                    <label
-                      htmlFor="terms"
-                      className="text-base font-light leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      Remember password
-                    </label>
-                  </div>
-                  <Link
-                    href="/forgot-password"
-                    className="text-base font-light text-slate-500"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
-                <div className="space-y-4">
-                  <ButtonCustom varient="accent">Login</ButtonCustom>
-                  <form action={handleGoogleSignIn}>
-                    <ButtonCustom className="w-full" htmlType="submit">
-                      <img src={googleIcon} />
-                      <span>Login with Google</span>
-                    </ButtonCustom>
-                  </form>
-                </div>
+                <UserLoginForm />
               </div>
             </div>
             <footer>

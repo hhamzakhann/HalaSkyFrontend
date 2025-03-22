@@ -1,13 +1,9 @@
 import BgImage from "@/public/bg-forgotPass.jpg";
 import Logo from "../_components/Logo";
 import Image from "next/image";
-import { PasswordInput } from "../_components/formControls/PasswordInput";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
-import ButtonCustom from "../_components/Button";
-import googleIcon from "@/public/google-icon.svg";
 import Container from "../_components/Container";
+import FogotPasswordForm from "../_components/forms/FogotPasswordForm";
 
 export default function Page() {
   return (
@@ -33,10 +29,7 @@ export default function Page() {
               <p className="font-light text-sm text-[#808080] mt-1 mb-6">
                 No worries, we’ll send you reset instructions.
               </p>
-              <div className="space-y-6">
-                <Input placeholder="Email" type="email" />
-                <ButtonCustom varient="accent">Reset Password</ButtonCustom>
-              </div>
+              <FogotPasswordForm />
             </div>
             <footer>
               <span className="text-base text-slate-500 font-light mr-2">

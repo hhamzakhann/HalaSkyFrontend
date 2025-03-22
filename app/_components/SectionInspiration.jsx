@@ -1,23 +1,28 @@
-import Container from "./Container";
+import Image from "next/image";
+import Image1 from "@/public/image1.png";
+import Image2 from "@/public/Ai-robot.png";
 
 export default function SectionInspiration() {
   return (
-    <Container>
-      <section className="max-w-4xl mx-auto py-14 md:px-12">
-        <div className="text-center">
-          <h2 className="font-medium text-4xl sm:text-6xl font-spartan mb-4">
-            Journey Inspirations from Travelers
-          </h2>
-          <p className="font-light text-base mb-3">
-            Dive into unique trip itineraries crafted by our global travelers.
-            Find your next adventure and share your own journey with fellow
-            explorers.
-          </p>
+    <section className="bg-accent py-16 rounded-3xl">
+      <div className="max-w-screen-xl mx-auto grid grid-cols-[2fr_1fr] items-center">
+        <div>
+          <Image src={Image1} />
         </div>
         <div>
-          <img src="/temp.png" alt="" />
+          <figure>
+            <Image src={Image2} />
+            <figcaption className="text-center">
+              <h3 className="font-semibold text-5xl mb-2">AI Assist:</h3>{" "}
+              <p className="font-normal text-3xl">
+                Revolutionizing Your Travel{" "}
+                <span className="text-blueDark2 font-semibold">Booking</span>{" "}
+                Experience
+              </p>
+            </figcaption>
+          </figure>
         </div>
-      </section>
-    </Container>
+      </div>
+    </section>
   );
 }

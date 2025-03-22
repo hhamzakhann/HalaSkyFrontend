@@ -15,7 +15,7 @@ export function PasswordInput({
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+    setShowPassword((is) => !is);
   };
 
   return (

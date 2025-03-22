@@ -1,8 +1,14 @@
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import "@/app/_styles/global.css";
+import "@/app/_styles/ngprogress.css"; // Import default styles
 import { poppinsFont } from "./font";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./provider";
+import { BlogProvider } from "./_contexts/BlogContext";
+
+import ProgressBarLoading from "./_components/ProgressBarLoading";
+import { RegisterProvider } from "./_contexts/RegisterContext";
+import { ForgotPasswordProvider } from "./_contexts/ForgotPasswordContext";
 
 // import { Poppins, League_Spartan } from "next/font/google";
 
@@ -34,7 +40,16 @@ export default function RootLayout({ children }) {
         <main>
           <Toaster />
           <AntdRegistry>
-            <AuthProvider>{children}</AuthProvider>
+            <RegisterProvider>
+              <AuthProvider>
+                <BlogProvider>
+                  <ForgotPasswordProvider>
+                    <ProgressBarLoading />
+                    {children}
+                  </ForgotPasswordProvider>
+                </BlogProvider>
+              </AuthProvider>
+            </RegisterProvider>
           </AntdRegistry>
         </main>
       </body>

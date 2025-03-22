@@ -11,6 +11,11 @@ import TransitList from "@/app/_components/TransitList";
 
 import SidebarFilter from "../_features/flight/SidebarFilter";
 import FlightSecondaryNav from "../_features/flight/FlightSecondaryNav";
+import Filter from "./Filter";
+import { getFlights } from "../_lib/data-service";
+import Flights from "../_features/flight/Flights";
+import { Suspense } from "react";
+import { FlightCardSkeleton } from "../_components/UI/FlightCardSkeleton";
 
 export const metadata = {
   title: "Flight",
@@ -28,11 +33,7 @@ export default function Page() {
           <div className="grid grid-cols-1 md:grid-cols-[350px_1fr] gap-10">
             <div className="space-y-6">
               <div>
-                <ButtonCustom
-                  className="w-full mb-3"
-                  varient="accent"
-                  size="large"
-                >
+                <ButtonCustom className="w-full mb-3" type="accent">
                   <span>Set Alert</span>
                   <img src="/ring.svg" />
                 </ButtonCustom>
@@ -43,24 +44,14 @@ export default function Page() {
                 </Card>
               </div>
               <SidebarFilter>
-                <TransitList />
-                <PricingFilter />
-                <FlightFacilitiesList />
-                <ButtonCustom varient="accent" shape="round">
-                  Apply Now
-                </ButtonCustom>
+                <Filter />
               </SidebarFilter>
             </div>
             <div>
               <FlightSearchList />
-              <p className="mb-4 text-sm font-medium text-slate-400">
-                24 Result Found
-              </p>
-              <div className="space-y-8">
-                <FlightDetailCard />
-                <FlightDetailCard />
-                <FlightDetailCard />
-              </div>
+              <Suspense fallback={<FlightCardSkeleton />}>
+                <Flights />
+              </Suspense>
             </div>
           </div>
         </section>

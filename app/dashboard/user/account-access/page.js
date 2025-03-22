@@ -113,7 +113,7 @@ export default async function Page() {
   if (data.status) {
     accessRecoveryList = data.data;
   }
-  console.log("DATA::::", data);
+
   return (
     <div>
       <DashboardHeader title="User Account Access" />

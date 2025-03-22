@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function Rating({ className }) {
+export default function Rating({ className, rate }) {
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       <Image
@@ -12,8 +12,7 @@ export default function Rating({ className }) {
       />
 
       <div className="space-x-1 text-xs">
-        <span>4.5</span>
-        <span>(562)</span>
+        <span>{rate}</span>
       </div>
     </div>
   );

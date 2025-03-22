@@ -8,6 +8,15 @@ module.exports = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        "caret-blink": {
+          "0%,70%,100%": { opacity: "1" },
+          "20%,50%": { opacity: "0" },
+        },
+      },
+      animation: {
+        "caret-blink": "caret-blink 1.25s ease-out infinite",
+      },
       fontFamily: {
         sans: ["Poppins", "sans-serif"],
         spartan: ["League Spartan", "sans-serif"],
@@ -28,6 +37,8 @@ module.exports = {
         blueDark: "#15193C",
         blueDark2: "#172B85",
         accent: "#FCCD27",
+        success: "#47CA6A",
+        blue: "#52ACFF",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

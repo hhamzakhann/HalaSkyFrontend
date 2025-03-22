@@ -23,7 +23,6 @@ import ButtonCustom from "../Button";
 import { roleAssignmentSchema } from "@/app/_lib/zod";
 
 export default function AddMember({ roles }) {
-  console.log("ROLES:::", roles);
   const form = useForm({
     resolver: zodResolver(roleAssignmentSchema),
     defaultValues: {

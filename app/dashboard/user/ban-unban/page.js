@@ -27,6 +27,7 @@ import DashboardMainContainer from "@/app/_components/UI/DashboardMainContainer"
 import { Tag } from "antd";
 import Image from "next/image";
 import userIcon from "@/public/user-icon.svg";
+import { getBanUnbanUsers } from "@/app/_lib/data-service";
 
 export const metadata = { title: "Users" };
 
@@ -98,7 +99,9 @@ const tableHeaderData = [
   "Action",
 ];
 
-export default function Page() {
+export default async function Page() {
+  const users = await getBanUnbanUsers();
+
   return (
     <div>
       <DashboardHeader title="User Ban/UnBan" icon={<Image src={userIcon} />} />
@@ -167,13 +170,13 @@ export default function Page() {
                       </Tag>
                     </TableCell>
                     <TableCell className="py-4 px-6 w-auto whitespace-nowrap">
-                      {user.recoveryRequest}
+                      {user.violation_count}
                     </TableCell>
                     <TableCell className="py-4 px-6 w-auto whitespace-nowrap">
-                      {user.reason}
+                      {user.violations.length || "--"}
                     </TableCell>
                     <TableCell className="py-4 px-6 w-auto whitespace-nowrap">
-                      {user.lastActiveDate}
+                      {user.lastActiveDate || "--"}
                     </TableCell>
                     <TableCell className="py-4 px-6 w-auto whitespace-nowrap">
                       <ButtonCustom className="font-normal" variant="link">

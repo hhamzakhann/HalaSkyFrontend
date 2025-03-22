@@ -8,6 +8,7 @@ import LinkButton from "@/app/_components/LinkButton";
 import ButtonCustom from "@/app/_components/Button";
 import Media from "@/app/_components/Media";
 import { MonthPicker } from "@/app/_components/MonthPicker";
+import listIcon from "@/public/list-icon.svg";
 
 export default function Page() {
   return (
@@ -17,7 +18,7 @@ export default function Page() {
       </DashboardHeader>
       <DashboardMainContainer>
         <div className="divide-slate-300 flex flex-col md:flex-row items-center justify-between">
-          <Media title="Total Complains" number="1,256" />
+          <Media title="Total Complains" number="1,256" icon={listIcon} />
           <Media title="Complains Resolved" number="885" />
           <Media title="Complains Inprogress" number="300" />
           <Media title="Complains Escalated" number="71" />
