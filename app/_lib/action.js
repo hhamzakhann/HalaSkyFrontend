@@ -351,3 +351,26 @@ export async function creatPoll({ title, description, question, options }) {
 
   return data;
 }
+export async function getFlights(requestData) {
+  console.log("FLight REQ DATA:::", requestData);
+  const session = await auth();
+
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${session.user.token}`);
+  myHeaders.append("Content-Type", "application/json");
+
+  const jsonRequest = JSON.stringify(requestData);
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: jsonRequest,
+    redirect: "follow",
+  };
+
+  const response = await fetch(`${BASE_URL}/flight/get`, requestOptions);
+  const data = await response.json();
+  return data;
+
+  // throw new Error("Something went wrong while getting flights");
+}

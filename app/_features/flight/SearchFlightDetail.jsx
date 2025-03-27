@@ -49,9 +49,9 @@ const calcFlightTransists = function ({ schedule }) {
     .every((num, i, arr) => num === arr[0]);
 
   if (isSameAllFlightNum && schedule.length > 1) return "Direct Flight 🛫";
-  if (!isSameAllFlightNum && schedule.length > 1)
-    return `${schedule.length} Transits`;
+  if (!isSameAllFlightNum && schedule.length > 1) return `${schedule.length}`;
 };
+let totalBaggage = 0;
 
 export default function SearchFlightDetail({
   flight,
@@ -59,38 +59,44 @@ export default function SearchFlightDetail({
   internaryIndex,
   internaryList,
 }) {
-  console.log("asdfasdf", flight, flightDesc[0]);
+  const departureTime = flight?.legList[0]?.schedule[0]?.departure.time;
+  const arrivalTime = flight?.legList[0]?.schedule[0]?.arrival.time;
+  const seatsAvailibilty =
+    flight?.passengerPriceDetail[0]?.passengerList[0]?.FareComponents[0]
+      ?.segments[0].segment?.seatsAvailable;
 
-  let totalBaggage = 0;
-  let seatsRemaining = 0;
+  const stops = flight?.legList[0]?.schedule?.length;
 
   function calcBaggage(legIndex) {
-    flight?.passengerPriceDetail.forEach((passDetail, index) => {
-      const baggage = passDetail.passengerList.forEach((passenger, index) => {
+    flight?.passengerPriceDetail?.forEach((passDetail, index) => {
+      const baggage = passDetail?.passengerList?.forEach((passenger, index) => {
         totalBaggage =
-          passenger.baggageInformation[legIndex].detail.weight || 0;
+          passenger?.baggageInformation[legIndex]?.detail.weight || 0;
       });
     });
     return totalBaggage;
   }
 
   function formatFlightDurations(flights) {
-    return flights.map((flight) => {
-      // Parse the ISO time, including time zone offset
+    const totalMinutes = flights.reduce((sum, flight) => {
       const departureTime = parseISO(`2024-01-01T${flight.departure.time}`);
       const arrivalTime = parseISO(`2024-01-01T${flight.arrival.time}`);
+      return sum + Math.abs(differenceInMinutes(arrivalTime, departureTime));
+    }, 0);
 
-      // Calculate difference in minutes
-      const diffMinutes = Math.abs(
-        differenceInMinutes(arrivalTime, departureTime)
-      );
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
 
-      // Convert minutes into hours and minutes
-      const hours = Math.floor(diffMinutes / 60);
-      const minutes = diffMinutes % 60;
+    return `${hours}hr ${minutes}min`;
+  }
 
-      return { id: flight.id, duration: `${hours}hr ${minutes}min` };
-    });
+  function formateTime(time) {
+    console.log("DEPARTURE TIME:", time);
+
+    const fullTime = `2025-01-01T${time}`;
+
+    const date = parseISO(fullTime);
+    return format(date, "HH:mm");
   }
 
   return (
@@ -112,23 +118,25 @@ export default function SearchFlightDetail({
                     {formatDate(desc.departureDate)}
                   </span>
                   <span className="text-gray">&bull;</span>
-                  {/* <span>{formateTime(schedule.departure.time)}</span> */}
+                  <span>{formateTime(departureTime)}</span>
                 </p>
               </div>
               <div className="flex flex-col items-center justify-center">
                 <p className="text-xs font-normal">
-                  {
-                    formatFlightDurations(flight.legList[index].schedule).at(
-                      index
-                    ).duration
-                  }
+                  {formatFlightDurations(flight.legList[index].schedule)}
                 </p>
                 <p className="text-xs font-normal space-y-6">
-                  <span>Direct</span>
-                  <span>&bull;</span>
-                  <span>{calcFlightTransists(flight.legList[index])}</span>
+                  {stops === 1 ? (
+                    "Direct"
+                  ) : (
+                    <span className="inline-flex gap-1">
+                      <span className="font-bold">
+                        {calcFlightTransists(flight.legList[index])}
+                      </span>
+                      <span>Transits</span>
+                    </span>
+                  )}
                 </p>
-                <p className="text-xs font-normal space-y-6">Airline</p>
               </div>
               <div className="flex flex-col gap-1 ">
                 <p className="flex items-center gap-2 font-normal text-xs text-gray">
@@ -141,11 +149,13 @@ export default function SearchFlightDetail({
                 <p className="flex items-center gap-2 font-normal text-xs">
                   <span className="text-gray">-----</span>
                   <span className="text-gray">&bull;</span>
-                  <span>{/* {formateTime(schedule.arrival.time)} */}</span>
+                  <span>{formateTime(arrivalTime)}</span>
                 </p>
               </div>
               <div className="flex items-center justify-center gap-2 font-normal text-sm col-span-full">
-                <p>One Stops</p>
+                <p>{stops === 1 && "0 Stop"}</p>
+                <p>{stops === 2 && "Two Stops"}</p>
+                <p>{stops > 2 && `2+ Stops`}</p>
                 <div className="basis-52 flex items-center justify-center gap-3">
                   <Image src={luggageBagIcon} alt="Luggage bag icon" />
                   <span>Total : {calcBaggage(index)}Kg</span>
@@ -155,7 +165,7 @@ export default function SearchFlightDetail({
                   color="red"
                   className="text-sm font-normal"
                 >
-                  {seatsRemaining} Seats Left
+                  {seatsAvailibilty} Seats Left
                 </Tag>
               </div>
             </>

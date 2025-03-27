@@ -47,3 +47,52 @@ export const pollFormSchema = z.object({
     .array(z.string().min(1, { message: "Option cannot be empty" }))
     .min(2, { message: "At least 2 options are required" }),
 });
+
+export const flightSchema = z
+  .object({
+    destinationList: z
+      .array(
+        z.object({
+          DepartureAirport: z
+            .object({})
+            .refine((val) => typeof val === "object" && val !== null, {
+              message: "Departure location is required",
+              path: ["DepartureAirport"],
+            }),
+          ArrivalAirport: z
+            .object({})
+            .refine((val) => typeof val === "object" && val !== null, {
+              message: "Arrival location is required",
+              path: ["ArrivalAirport"],
+            }),
+          travelDate: z.string().min(1, "Travel date is required"),
+        })
+      )
+      .min(1, "At least one destination is required"),
+
+    ticketType: z.enum(["oneWay", "return", "multiCity"]),
+
+    returnDate: z.string().optional(),
+
+    passengerList: z
+      .array(
+        z.object({
+          type: z.string().min(1, "Passenger type is required"),
+          total: z.number().min(0, "Total must be 0 or greater"),
+        })
+      )
+      .refine((passengers) => passengers.some((p) => p.total > 0), {
+        message: "At least one passenger must be selected",
+        path: ["passengerList"],
+      }),
+  })
+  .superRefine((data, ctx) => {
+    // ✅ Validate returnDate only if ticketType is "return"
+    if (data.ticketType === "return" && !data.returnDate) {
+      ctx.addIssue({
+        path: ["returnDate"],
+        message: "Return date is required for return flights",
+        code: z.ZodIssueCode.custom,
+      });
+    }
+  });

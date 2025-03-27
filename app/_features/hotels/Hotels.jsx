@@ -6,6 +6,10 @@ import Message from "@/app/_components/UI/Message";
 export default async function Hotels({ searchParamsData }) {
   const respData = await getHotels(searchParamsData);
 
+  console.log(
+    "HOTEL RESP DATA::",
+    respData?.data?.GetHotelAvailRS?.HotelAvailInfos?.HotelAvailInfo
+  );
   const hotels =
     respData?.data?.GetHotelAvailRS?.HotelAvailInfos?.HotelAvailInfo;
   let displayHotels = [];

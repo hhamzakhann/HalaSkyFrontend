@@ -2,6 +2,7 @@ import NextAuth, { CredentialsSignin } from "next-auth";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { signInSchema } from "./zod";
+import { BASE_URL } from "@/constant/constant";
 
 class InvalidLoginError extends CredentialsSignin {
   code = "Invalid identifier or password";
@@ -50,10 +51,7 @@ export const {
           redirect: "follow",
         };
 
-        const resp = await fetch(
-          "http://localhost:3005/auth/login",
-          requestOptions
-        );
+        const resp = await fetch(`${BASE_URL}/auth/login`, requestOptions);
 
         if (!resp.ok || resp.status === 401) return null;
 

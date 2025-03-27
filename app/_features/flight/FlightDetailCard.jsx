@@ -7,7 +7,7 @@ import { SearchFlightDetail } from ".";
 // import globeImage from "@/public/globe-icon.svg";
 
 export default function FlightDetailCard({ flight, flightDesc, index }) {
-  console.log(flight);
+  console.log("FLIGHT", flight);
   return (
     <header>
       <Card varient="small" className="relative">

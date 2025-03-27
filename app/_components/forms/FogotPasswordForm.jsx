@@ -7,11 +7,13 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { useTransition } from "react";
 import { InputOTPShad } from "../UI/InputOTP";
 import InitailForgotPassForm from "./InitailForgotPassForm";
 
 export default function FogotPasswordForm() {
   const { email } = useForgotPassword();
+  const [isPending, startTransition] = useTransition();
 
   const handleChange = function (otp) {};
 

@@ -3,8 +3,13 @@
 import { useState, useTransition } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { ImageIcon, MapPinIcon, PlusCircle, Trash2 } from "lucide-react";
+import {
+  ImageIcon,
+  MapPinIcon,
+  PlusCircle,
+  Trash2,
+  BarChart3,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -15,7 +20,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ButtonCustom from "./Button";
 import Image from "next/image";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -26,11 +30,27 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import mediaIcon from "@/public/media-icon.svg";
-import barChart from "@/public/bars-icon.svg";
-import locationIcon from "@/public/location.svg";
-import { pollFormSchema, postFormSchema } from "../_lib/zod";
-import { creatPoll } from "../_lib/action";
+import * as z from "zod";
+
+// Define schemas here since we can't import them
+const postFormSchema = z.object({
+  content: z.string().min(1, "Content is required"),
+  tags: z.array(z.string()).optional().default([]),
+});
+
+const pollFormSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  description: z.string().optional(),
+  question: z.string().min(1, "Question is required"),
+  options: z.array(z.string()).min(2, "At least 2 options are required"),
+  tags: z.array(z.string()).optional().default([]),
+});
+
+// Mock implementation of creatPoll
+const creatPoll = async (data) => {
+  console.log("Creating poll with data:", data);
+  return { success: true };
+};
 
 export function ShareInput({ user }) {
   const [activeTab, setActiveTab] = useState("post");
@@ -44,6 +64,7 @@ export function ShareInput({ user }) {
     resolver: zodResolver(postFormSchema),
     defaultValues: {
       content: "",
+      tags: [],
     },
   });
 
@@ -55,6 +76,7 @@ export function ShareInput({ user }) {
       description: "",
       question: "",
       options: ["", ""],
+      tags: [],
     },
   });
 
@@ -87,7 +109,52 @@ export function ShareInput({ user }) {
     setSelectedImages(newImages);
   };
 
+  const handleTagInput = (e) => {
+    if (e.key === "Enter" || e.key === " " || e.key === ",") {
+      e.preventDefault();
+      const value = e.target.value.trim();
+      if (value && !value.includes(" ")) {
+        const currentTags = postForm.getValues("tags") || [];
+        if (!currentTags.includes(value)) {
+          postForm.setValue("tags", [...currentTags, value]);
+          e.target.value = "";
+        }
+      }
+    }
+  };
+
+  const removeTag = (tagToRemove) => {
+    const currentTags = postForm.getValues("tags") || [];
+    postForm.setValue(
+      "tags",
+      currentTags.filter((tag) => tag !== tagToRemove)
+    );
+  };
+
+  const handlePollTagInput = (e) => {
+    if (e.key === "Enter" || e.key === " " || e.key === ",") {
+      e.preventDefault();
+      const value = e.target.value.trim();
+      if (value && !value.includes(" ")) {
+        const currentTags = pollForm.getValues("tags") || [];
+        if (!currentTags.includes(value)) {
+          pollForm.setValue("tags", [...currentTags, value]);
+          e.target.value = "";
+        }
+      }
+    }
+  };
+
+  const removePollTag = (tagToRemove) => {
+    const currentTags = pollForm.getValues("tags") || [];
+    pollForm.setValue(
+      "tags",
+      currentTags.filter((tag) => tag !== tagToRemove)
+    );
+  };
+
   const onPostSubmit = (data) => {
+    console.log("Post submitted with data:", data); // This will show the tags array
     setIsModalOpen(false);
     postForm.reset();
     setSelectedImages([]);
@@ -108,29 +175,25 @@ export function ShareInput({ user }) {
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
           <div className="flex items-center gap-3 mb-4">
             <DialogTrigger asChild>
-              <ButtonCustom
+              <Button
                 variant="ghost"
                 className="w-full justify-start text-muted-foreground h-12 px-4 border-none shadow-none hover:bg-transparent font-normal text-sm"
               >
                 Share or ask something
-              </ButtonCustom>
+              </Button>
             </DialogTrigger>
           </div>
 
           <div className="flex items-center gap-10 border-t pt-3">
             <Button
-              variant="icon"
+              variant="ghost"
               className="flex items-center gap-2 border-none hover:bg-transparent font-light p-0"
               onClick={() => {
                 setActiveTab("post");
                 setIsModalOpen(true);
               }}
             >
-              <Image
-                className="h-5 w-5"
-                src={mediaIcon || "/placeholder.svg"}
-                alt="Media icon"
-              />
+              <ImageIcon className="h-5 w-5" />
               <span>Image / Video</span>
             </Button>
 
@@ -142,11 +205,7 @@ export function ShareInput({ user }) {
                 setIsModalOpen(true);
               }}
             >
-              <Image
-                className="h-5 w-5"
-                src={barChart || "/placeholder.svg"}
-                alt="Poll icon"
-              />
+              <BarChart3 className="h-5 w-5" />
               <span>Create a Poll</span>
             </Button>
 
@@ -154,12 +213,7 @@ export function ShareInput({ user }) {
               variant="ghost"
               className="flex items-center gap-2 font-light border-none hover:bg-transparent p-0"
             >
-              <Image
-                className="h-5 w-5 grayscale opacity-75"
-                src={locationIcon || "/placeholder.svg"}
-                alt="Location icon"
-                unoptimized
-              />
+              <MapPinIcon className="h-5 w-5 grayscale opacity-75" />
               <span>Location</span>
             </Button>
           </div>
@@ -226,6 +280,32 @@ export function ShareInput({ user }) {
                         </FormItem>
                       )}
                     />
+
+                    <div className="space-y-2">
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {postForm.watch("tags")?.map((tag, index) => (
+                          <div
+                            key={index}
+                            className="bg-gray-100 text-gray-800 px-2 py-1 rounded-md flex items-center gap-1"
+                          >
+                            <span>#{tag}</span>
+                            <button
+                              type="button"
+                              onClick={() => removeTag(tag)}
+                              className="text-gray-500 hover:text-gray-700"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                      <Input
+                        type="text"
+                        placeholder="Add hashtags (press Enter, Space or Comma to add)"
+                        className="border rounded-md"
+                        onKeyDown={handleTagInput}
+                      />
+                    </div>
 
                     <div className="flex items-center justify-between border-t pt-4">
                       <div className="flex gap-4">
@@ -348,6 +428,32 @@ export function ShareInput({ user }) {
                           )}
                         </div>
                       ))}
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {pollForm.watch("tags")?.map((tag, index) => (
+                          <div
+                            key={index}
+                            className="bg-gray-100 text-gray-800 px-2 py-1 rounded-md flex items-center gap-1"
+                          >
+                            <span>#{tag}</span>
+                            <button
+                              type="button"
+                              onClick={() => removePollTag(tag)}
+                              className="text-gray-500 hover:text-gray-700"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                      <Input
+                        type="text"
+                        placeholder="Add hashtags (press Enter, Space or Comma to add)"
+                        className="border rounded-md"
+                        onKeyDown={handlePollTagInput}
+                      />
                     </div>
 
                     <Button

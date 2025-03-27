@@ -1,4 +1,4 @@
-import { getFlights } from "@/app/_lib/data-service";
+import { getFlights } from "@/app/_lib/action";
 import React from "react";
 import { FlightDetailCard } from ".";
 import { cookies } from "next/headers";
@@ -10,17 +10,33 @@ export default async function Flights() {
   const formDataCookie = cookieStore.get("formData");
 
   const formData = JSON.parse(formDataCookie?.value || "{}");
+  console.log("SEARCHED DATA FROM THE FLIGHT FILTER:>>>", formData);
+  const { destinationList, passengerList, returnDate, ticketType, ...rest } =
+    formData;
+
+  const updatedDestinationList = [
+    ...destinationList,
+    {
+      DepartureAirport: destinationList.at(0).ArrivalAirport,
+      ArrivalAirport: destinationList.at(0).DepartureAirport,
+      travelDate: returnDate,
+    },
+  ];
+
+  if (!Object.entries(formData).length) return <p>No Filter Applied</p>;
+
+  const dataToLoad =
+    ticketType === "return"
+      ? { destinationList: updatedDestinationList, passengerList }
+      : formData;
 
   let flights = [];
+  const resp = await getFlights(dataToLoad);
+  if (resp.status === 429) return <p>{resp.error}</p>;
 
-  // const { data: flights } = await getFlights();
-  const resp = await getFlights(formData);
-
-  console.log("TOTAL FLIGHT RESP:", formData, resp.data);
   if (resp.status) flights = resp.data;
 
-  if (!resp.status)
-    return <p className="text-center">No flight found for the query.</p>;
+  if (!resp.status) return <p className="text-center">No flight found.</p>;
 
   const itinerariesList = flights.flatMap((flight) => flight.itinerariesList);
   const flightDescriptions = flights.flatMap((flight) => flight.description);
@@ -28,7 +44,7 @@ export default async function Flights() {
   return (
     <>
       <p className="mb-4 text-sm font-medium text-slate-400">
-        {flights.length} Result Found
+        {itinerariesList.length} Result Found
       </p>
       <div className="space-y-8">
         {itinerariesList.map((flight, index) => (

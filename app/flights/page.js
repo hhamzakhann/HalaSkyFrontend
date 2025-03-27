@@ -49,7 +49,10 @@ export default function Page() {
             </div>
             <div>
               <FlightSearchList />
-              <Suspense fallback={<FlightCardSkeleton />}>
+              <Suspense
+                fallback={<FlightCardSkeleton />}
+                key={crypto.randomUUID()}
+              >
                 <Flights />
               </Suspense>
             </div>

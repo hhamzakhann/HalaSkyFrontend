@@ -40,14 +40,16 @@ export default function HotelsCard({ hotel }) {
         </div>
       </div>
       <div className="relative w-full aspect-square">
-        HotelImageInfo?.ImageItem?.Image?.Url ?
-        <Image
-          src={HotelImageInfo?.ImageItem?.Image?.Url}
-          fill
-          className="object-cover"
-          alt="Trending hotel image"
-        />
-        : ""
+        {HotelImageInfo?.ImageItem?.Image?.Url ? (
+          <Image
+            src={HotelImageInfo?.ImageItem?.Image?.Url}
+            fill
+            className="object-cover"
+            alt="Trending hotel image"
+          />
+        ) : (
+          ""
+        )}
       </div>
       <figcaption className="py-4 space-y-2 relative">
         <div className="text-xl font-normal md:text-sm lg:text-xl max-w-[80%]">

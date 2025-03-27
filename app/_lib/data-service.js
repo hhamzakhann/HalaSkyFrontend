@@ -138,7 +138,7 @@ export async function addMember(newMember) {
     redirect: "follow",
   };
 
-  fetch("http://localhost:3005/user/add-member", requestOptions)
+  fetch(`${BASE_URL}/user/add-member`, requestOptions)
     .then((response) => response.text())
     .then((result) => console.log(result))
     .catch((error) => console.error(error));
@@ -166,7 +166,7 @@ export async function updateUserRole(newMember) {
     redirect: "follow",
   };
 
-  fetch("http://localhost:3005/user/add-member", requestOptions)
+  fetch(`${BASE_URL}/user/add-member`, requestOptions)
     .then((response) => response.text())
     .then((result) => console.log(result))
     .catch((error) => console.error(error));
@@ -283,30 +283,6 @@ export async function getHotels({
   };
 
   const response = await fetch(`${BASE_URL}/hotel/get`, requestOptions);
-  if (response.status === 401) await handleSignOut();
   const data = await response.json();
   return data;
-}
-
-export async function getFlights(requestData) {
-  const session = await auth();
-
-  const myHeaders = new Headers();
-  myHeaders.append("Authorization", `Bearer ${session.user.token}`);
-  myHeaders.append("Content-Type", "application/json");
-
-  const jsonRequest = JSON.stringify(requestData);
-
-  const requestOptions = {
-    method: "POST",
-    headers: myHeaders,
-    body: jsonRequest,
-    redirect: "follow",
-  };
-
-  const response = await fetch(`${BASE_URL}/flight/get`, requestOptions);
-  const data = await response.json();
-  return data;
-
-  // throw new Error("Something went wrong while getting flights");
 }

@@ -6,6 +6,7 @@ import {
   DatePickerWithRange,
   SelectShadecn,
 } from "@/app/_components/formControls";
+import Locations from "@/app/_components/formControls/Locations";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -30,36 +31,15 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const locations = [
-  // London (UK) - 3 Cities
-  { value: "LHR", label: "London Heathrow", country: "UK" },
-  { value: "LCY", label: "London City", country: "UK" },
-  { value: "LGW", label: "London Gatwick", country: "UK" },
-
-  // Saudi Arabia (SA) - 4 Cities
-  { value: "RUH", label: "Riyadh", country: "SA" },
-  { value: "JED", label: "Jeddah", country: "SA" },
-  { value: "DMM", label: "Dammam", country: "SA" },
-  { value: "MED", label: "Medina", country: "SA" },
-
-  // Dubai (AE) - 4 Cities
-  { value: "DXB", label: "Dubai International", country: "AE" },
-  { value: "DWC", label: "Al Maktoum International", country: "AE" },
-  { value: "SHJ", label: "Sharjah", country: "AE" },
-  { value: "AUH", label: "Abu Dhabi", country: "AE" },
-];
-
 export default function SecondaryNav({ defaultDates, defaultData }) {
   const [locationOpen, setLocationOpen] = useState(false);
   const [dateRangeSelection, setDateRangeSelection] = useState({});
   const [guestsOpen, setGuestsOpen] = useState(false);
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(2);
-  const [location, setLocation] = useState(function () {
-    return locations.find(
-      (location) => location.value === defaultData.cityCode
-    );
-  });
+  const [location, setLocation] = useState(undefined);
+
+  console.log("default dates::::", defaultData);
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -69,8 +49,8 @@ export default function SecondaryNav({ defaultDates, defaultData }) {
     const toDate = new Date(dateRangeSelection?.to);
 
     const params = new URLSearchParams(searchParams.toString());
-    params.set("cityCode", location.value);
-    params.set("countryCode", location.country);
+    params.set("cityCode", location.code);
+    params.set("countryCode", location.country_code);
 
     if (dateRangeSelection?.from && dateRangeSelection?.to) {
       params.set("checkIn", format(fromDate || new Date(), "yyyy-MM-dd"));
@@ -104,57 +84,12 @@ export default function SecondaryNav({ defaultDates, defaultData }) {
 
             <div className="flex items-center gap-1">
               <div className=" rounded-lg w-full ">
-                <Popover open={locationOpen} onOpenChange={setLocationOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={locationOpen}
-                      className="w-full justify-between border-0 bg-transparent hover:bg-transparent hover:text-black p-0 shadow-none"
-                    >
-                      <div className="font-normal text-base">
-                        {location?.label}
-                      </div>
-
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[300px] p-0">
-                    <Command>
-                      <CommandInput placeholder="Search location..." />
-                      <CommandEmpty>No location found.</CommandEmpty>
-                      <CommandList>
-                        <CommandGroup>
-                          {locations.map((item) => (
-                            <CommandItem
-                              key={item.value}
-                              value={item.value}
-                              onSelect={() => {
-                                setLocation(item);
-                                setLocationOpen(false);
-                              }}
-                            >
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  location?.value === item.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                              <div>
-                                <div>{item.label}</div>
-                                <div className="text-sm text-muted-foreground">
-                                  {item.country}
-                                </div>
-                              </div>
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
+                <Locations
+                  endpoint="/hotel/locations"
+                  onLocationSelect={(loc) => setLocation(loc)}
+                  defaultLocationSelected={defaultData.cityCode}
+                  defaultSearchQuery={defaultData.cityCode}
+                />
               </div>
             </div>
           </div>

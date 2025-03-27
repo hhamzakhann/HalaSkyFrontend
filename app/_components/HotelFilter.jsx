@@ -32,6 +32,8 @@ export default function HotelFilter() {
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(2);
 
+  console.log("CONFIRMING LOCATION:", location);
+
   return (
     <>
       {/* Search Form */}
@@ -43,6 +45,7 @@ export default function HotelFilter() {
             <Locations
               endpoint="/hotel/locations"
               icon={<Image src={planFlight} className="w-4 h-4" />}
+              onLocationSelect={(loc) => setLocation(loc)}
             />
           </div>
         </div>
@@ -223,8 +226,8 @@ export default function HotelFilter() {
             { variant: "accent" }
           )}`}
           // onClick={handleSearch}
-          href={`/hotels?cityCode=${location?.value}&countryCode=${
-            location?.country
+          href={`/hotels?cityCode=${location?.code}&countryCode=${
+            location?.country_code
           }&checkIn=${format(checkInDate, "yyyy-MM-dd")}&checkout=${format(
             checkOutDate,
             "yyyy-MM-dd"

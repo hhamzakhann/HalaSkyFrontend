@@ -17,82 +17,83 @@ import {
 import { BASE_URL } from "@/constant/constant";
 import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { useRef } from "react";
-import { useState } from "react";
-import planFlight from "@/public/planFlight.svg";
-import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 export default function Locations({
   icon,
   endpoint,
   onLocationSelect = () => {},
+  defaultSearchQuery = "",
+  defaultLocationSelected,
+  error = undefined,
 }) {
   const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState({});
+  const [searchQuery, setSearchQuery] = useState(defaultSearchQuery);
+  const [defaultLocationSelectedState, setDefaultLocationSelectedState] =
+    useState(defaultLocationSelected);
   const [isOpen, setIsOpen] = useState(false);
 
-  const controllerRef = useRef(null);
+  useEffect(() => {
+    const controller = new AbortController();
+    const getLocations = async function () {
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-  const handleValueChange = async function (searchQuery) {
-    // if (searchQuery.length <= 3) return;
+      const urlencoded = new URLSearchParams();
+      urlencoded.append("searchQuery", searchQuery);
 
-    if (controllerRef.current) {
-      controllerRef.current.abort();
-    }
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: urlencoded,
+        redirect: "follow",
+      };
 
-    const newController = new AbortController();
-    controllerRef.current = newController;
+      try {
+        const response = await fetch(`${BASE_URL}${endpoint}`, requestOptions, {
+          signal: controller.signal,
+        });
+        const data = await response.json();
 
-    const myHeaders = new Headers();
-    // myHeaders.append("Authorization", `Bearer ${session.user.token}`);
-    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
-    const urlencoded = new URLSearchParams();
-    urlencoded.append("searchQuery", searchQuery);
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: urlencoded,
-      redirect: "follow",
+        if (data.status && Array.isArray(data.data)) {
+          setLocations(data.data); // Update locations with API data
+        } else {
+          setLocations([]);
+        }
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          setLocations([]);
+          console.error(err.message);
+        }
+      }
     };
 
-    try {
-      const response = await fetch(`${BASE_URL}${endpoint}`, requestOptions, {
-        signal: newController.signal,
-      });
+    getLocations();
 
-      const data = await response.json();
-
-      if (data.status) setLocations(data.data);
-    } catch (err) {
-      if (err.name === "AbortError") {
-      } else {
-        console.error(err.message);
-      }
-    }
-
-    // if (response.status === 401) await handleSignOut();
-    // const data = await response.json();
-
-    // if (data.status) setLocation(data.data);
-
-    // if (searchLocation.length > 0) getLocation();
-  };
+    return function () {
+      controller.abort();
+    };
+  }, [searchQuery]);
 
   const handleSelection = function (location) {
+    setDefaultLocationSelectedState(undefined);
     setSelectedLocation(location);
     onLocationSelect(location);
     setIsOpen(false);
   };
+
+  // Ensure unique and searchable value for filtering
+  const getItemValue = (item) => {
+    return `${item.city}-${item.code}`.toLowerCase();
+  };
+
   return (
-    <Popover open={isOpen} onOpenChange={() => setIsOpen((is) => !is)}>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
           role="combobox"
-          aria-expanded={selectedLocation?.city}
           className="w-full justify-between border-0 bg-transparent hover:bg-transparent hover:text-black p-0 shadow-none font-normal text-base"
         >
           <div className="flex items-center gap-2">
@@ -101,24 +102,32 @@ export default function Locations({
                 {icon}
               </div>
             )}
-            {selectedLocation.city || selectedLocation.country ? (
+            {selectedLocation.city ||
+            selectedLocation.country ||
+            defaultLocationSelected?.city ||
+            defaultLocationSelected?.country ? (
               <div>
-                <div className=" text-left">{selectedLocation.city}</div>
-                <div className=" text-[#808080] text-xs  text-left">
-                  {selectedLocation.country}
+                <div className="text-left">
+                  {selectedLocation.city || defaultLocationSelectedState?.city}
+                </div>
+                <div className="text-[#808080] text-xs text-left">
+                  {selectedLocation.country ||
+                    defaultLocationSelectedState?.country}
                 </div>
               </div>
             ) : (
-              <p>Select location</p>
+              <p className={`${error ? "text-red-600" : ""}`}>
+                Select location
+              </p>
             )}
           </div>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0">
-        <Command>
+      <PopoverContent className="w-[500px] p-0">
+        <Command shouldFilter={false}>
           <CommandInput
-            onValueChange={(query) => handleValueChange(query)}
+            onValueChange={(value) => setSearchQuery(value)}
             placeholder="Search location..."
           />
           <CommandEmpty>No location found.</CommandEmpty>
@@ -126,24 +135,39 @@ export default function Locations({
             <CommandGroup>
               {locations.map((item) => (
                 <CommandItem
-                  key={item?.city}
-                  value={item?.city}
+                  key={item.code} // Use code as a stable, unique key
+                  value={getItemValue(item)} // Unique and searchable value
                   onSelect={() => handleSelection(item)}
+                  className="flex justify-between w-full"
                 >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      selectedLocation?.code === item?.code
-                        ? "opacity-100"
-                        : "opacity-0"
-                    )}
-                  />
-                  <div>
-                    <div>{item?.city}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {item?.country}
+                  <div className="flex items-center">
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        selectedLocation.code === item.code
+                          ? "opacity-100"
+                          : "opacity-0"
+                      )}
+                    />
+                    <div>
+                      <div>{item.city || item.state || "Unknown City"}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {item.country || "Unknown Country"}
+                      </div>
                     </div>
                   </div>
+                  {(item.code || item.name) && (
+                    <div className="text-right">
+                      {item.code && (
+                        <div className="font-semibold">{item.code}</div>
+                      )}
+                      {item.name && (
+                        <div className="text-xs text-muted-foreground">
+                          {item.name}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </CommandItem>
               ))}
             </CommandGroup>
