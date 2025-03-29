@@ -19,23 +19,23 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { ChevronsUpDown, Minus, Plus } from "lucide-react";
+import { ArrowRightSquare, ChevronsUpDown, Minus, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import calenderIcon from "@/public/calender-icon.svg";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+
 import { format } from "date-fns";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import ButtonCustom from "@/app/_components/Button";
 import usersIcon from "@/public/users-icons.svg";
 import { useRouter } from "next/navigation";
+import FlightDate from "./FlightDate";
+import CalenderPopover from "@/app/_components/CalenderPopover";
 
 const MAX_ROWS = 3;
 
 export default function FlightSecondaryForm({
   destinationList,
   passengerList,
-  selectedArrivalLocation,
-  selectedDepartureLocation,
   ticketType,
 }) {
   const defaultAdults =
@@ -43,44 +43,39 @@ export default function FlightSecondaryForm({
   const defaultChildren =
     passengerList?.find((p) => p.type === "C06")?.total || 0;
 
-  const [checkOutOpen, setCheckOutOpen] = useState(false);
-  const [checkOutDate, setCheckOutDate] = useState(new Date());
   const [guestsOpen, setGuestsOpen] = useState(false);
   const [adults, setAdults] = useState(defaultAdults);
   const [children, setChildren] = useState(defaultChildren);
-  const [departureLocation, setDepartureLocation] = useState(undefined);
-  const [arrivalLocation, setArrivalLocation] = useState(undefined);
   const router = useRouter();
 
   const DepartureAirport = destinationList?.at(0)?.DepartureAirport;
   const ArrivalAirport = destinationList?.at(0)?.ArrivalAirport;
-  const departureDefaultDate = destinationList?.at(0)?.travelDate;
 
-  const { control, handleSubmit, watch, setValue } = useForm({
+  console.log(destinationList);
+
+  const { control, handleSubmit, watch, setValue, reset } = useForm({
     defaultValues: {
       destinationList: destinationList
         ? destinationList
         : [
             {
-              travelDate: format(
-                departureDefaultDate || new Date(),
-                "yyyy-MM-dd'T'HH:mm:ss"
-              ),
-              DepartureAirport: DepartureAirport || "",
-              ArrivalAirport: ArrivalAirport || "",
+              travelDate: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
+              DepartureAirport: DepartureAirport || {},
+              ArrivalAirport: ArrivalAirport || {},
             },
           ],
       passengerList: [
         {
           type: "ADT",
-          total: defaultAdults,
+          total: "",
         },
         {
           type: "C06",
-          total: defaultChildren,
+          total: "",
         },
       ],
       ticketType,
+      returnDate: "",
     },
   });
 
@@ -95,19 +90,42 @@ export default function FlightSecondaryForm({
       { type: "C06", total: children },
     ]);
   }, [adults, children, setValue]);
+
   const onSubmit = async (data) => {
     console.log("On submittion properties", data);
     await fetch("/api/set-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...data,
-        selectedDepartureLocation:
-          departureLocation || selectedDepartureLocation,
-        selectedArrivalLocation: arrivalLocation || selectedArrivalLocation,
-      }),
+      body: JSON.stringify(data),
     });
     router.refresh(); // Navigate to the server component page
+  };
+
+  const handleTicketTypeChange = (type) => {
+    // setSelectedTicketType(type);
+
+    if (type === "oneWay") {
+      setValue("ticketType", "oneWay");
+      setValue("destinationList", [
+        {
+          travelDate: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
+          DepartureAirport: {},
+          ArrivalAirport: {},
+        },
+      ]);
+    } else if (type === "multiCity") {
+      setValue("ticketType", "multiCity");
+      handleAddRow();
+    } else if (type === "return") {
+      setValue("ticketType", "return");
+      setValue("destinationList", [
+        {
+          travelDate: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
+          DepartureAirport: {},
+          ArrivalAirport: {},
+        },
+      ]);
+    }
   };
 
   const handleAddRow = () => {
@@ -121,15 +139,24 @@ export default function FlightSecondaryForm({
   };
 
   const handleRemoveRow = (index) => {
-    if (fields.length > 1) {
+    console.log("INDEX", index, watch("destinationList")[index]);
+    if (fields.length > 1 && index < fields.length) {
       remove(index);
+      console.log("After Remove", fields);
     }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {fields.map((field, index) => (
-        <div className="grid grid-cols-[1fr_1fr]  md:grid-cols-[1fr_1fr_1fr_2fr_2fr_auto]">
+        <div
+          className={`grid grid-cols-[1fr_1fr]  ${
+            watch("ticketType") === "return"
+              ? "md:grid-cols-[1fr_1fr_1fr_1fr_1fr_2fr_auto]"
+              : "md:grid-cols-[1fr_1fr_1fr_2fr_2fr_auto]"
+          }`}
+          key={index}
+        >
           <div
             className={`search-flight-item px-3 py-2 md:px-4 md:py-3 space-y-2 `}
           >
@@ -147,7 +174,7 @@ export default function FlightSecondaryForm({
                     <Button
                       variant="outline"
                       className="rounded-full "
-                      onClick={handleRemoveRow}
+                      onClick={() => handleRemoveRow(index)}
                     >
                       <Minus />
                     </Button>
@@ -156,7 +183,7 @@ export default function FlightSecondaryForm({
                   <Button
                     variant="outline"
                     className="rounded-full "
-                    onClick={handleRemoveRow}
+                    onClick={() => handleRemoveRow(index)}
                   >
                     <Minus />
                   </Button>
@@ -174,8 +201,8 @@ export default function FlightSecondaryForm({
                     control={control}
                     render={({ field: { onChange, value } }) => (
                       <Select
-                        defaultValue={ticketType}
-                        onValueChange={onChange}
+                        defaultValue={ticketType || "Select Type"}
+                        onValueChange={(type) => handleTicketTypeChange(type)}
                       >
                         <SelectTrigger className=" p-0 h-auto border-none shadow-none focus:ring-transparent">
                           <SelectValue placeholder="Select a Trip" />
@@ -210,10 +237,11 @@ export default function FlightSecondaryForm({
                     <Locations
                       endpoint="/flight/airports"
                       defaultSearchQuery={DepartureAirport}
-                      defaultLocationSelected={selectedDepartureLocation}
+                      defaultLocationSelected={
+                        watch("destinationList")?.at(index)?.DepartureAirport
+                      }
                       onLocationSelect={(location) => {
-                        onChange(location.code);
-                        setDepartureLocation(location);
+                        onChange(location);
                       }}
                     />
                   );
@@ -221,7 +249,11 @@ export default function FlightSecondaryForm({
               />
             </div>
             <div className="fromToIcon-container">
-              <Image src={FromToIcon} />
+              {watch("ticketType") === "return" ? (
+                <Image src={FromToIcon} />
+              ) : (
+                <ArrowRightSquare />
+              )}
             </div>
           </div>
           <div className="search-flight-item px-3 py-2 md:px-7 md:py-3">
@@ -237,10 +269,11 @@ export default function FlightSecondaryForm({
                   <Locations
                     endpoint="/flight/airports"
                     defaultSearchQuery={ArrivalAirport}
-                    defaultLocationSelected={selectedArrivalLocation}
+                    defaultLocationSelected={
+                      watch("destinationList")?.at(index)?.ArrivalAirport
+                    }
                     onLocationSelect={(location) => {
-                      onChange(location.code);
-                      setArrivalLocation(location);
+                      onChange(location);
                     }}
                   />
                 )}
@@ -257,53 +290,34 @@ export default function FlightSecondaryForm({
                 name={`destinationList.${index}.travelDate`}
                 control={control}
                 render={({ field: { onChange, value } }) => (
-                  <Popover open={checkOutOpen} onOpenChange={setCheckOutOpen}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-between border-0 bg-transparent hover:bg-transparent hover:text-black p-0 shadow-none font-normal text-base"
-                      >
-                        <div className="flex items-center gap-2">
-                          <div>
-                            <div className=" text-left">
-                              {departureDefaultDate || checkOutDate
-                                ? format(
-                                    departureDefaultDate || checkOutDate,
-                                    "EEE, dd MMM"
-                                  )
-                                : "Select date"}
-                            </div>
-                            <div className="text-xs text-[#808080] text-left">
-                              {departureDefaultDate || checkOutDate
-                                ? format(
-                                    departureDefaultDate || checkOutDate,
-                                    "yyyy"
-                                  )
-                                : ""}
-                            </div>
-                          </div>
-                        </div>
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <CalendarComponent
-                        mode="single"
-                        selected={new Date(departureDefaultDate)}
-                        onSelect={(date) => {
-                          onChange(new Date(date).toISOString().split(".")[0]);
-                          setCheckOutDate(date);
-                          setCheckOutOpen(false);
-                        }}
-                        initialFocus
-                        // disabled={(date) => (checkInDate ? date < checkInDate : false)}
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <CalenderPopover
+                    onChange={onChange}
+                    checkInDate={watch("destinationList")[index]?.travelDate}
+                  />
                 )}
               />
             </div>
           </div>
+          {watch("ticketType") === "return" && (
+            <div className="search-flight-item px-3 py-2 md:px-4 md:py-3 space-y-2">
+              <div className="flex items-center gap-1">
+                <img src="/calender-icon.svg" />
+                <span className="font-normal text-xs">Return Date</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Controller
+                  control={control}
+                  name={`returnDate`}
+                  render={({ field: { onChange, value } }) => (
+                    <CalenderPopover
+                      onChange={onChange}
+                      checkInDate={watch("returnDate")}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+          )}
           <div
             className={`search-flight-item px-3 py-2 md:px-4 md:py-3 space-y-2 ${
               index > 0 ? "opacity-0 pointer-events-none" : ""

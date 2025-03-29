@@ -14,3 +14,14 @@ export function formatCurr(amount, currencyCode, locale) {
 export function getAirportInfo(cityCode) {
   return airlineShortCode.find((info) => info.code === cityCode);
 }
+
+export function transformData(data) {
+  return {
+    destinationList: data.destinationList.map((dest) => ({
+      travelDate: dest.travelDate,
+      DepartureAirport: dest.DepartureAirport.code,
+      ArrivalAirport: dest.ArrivalAirport.code,
+    })),
+    passengerList: data.passengerList,
+  };
+}

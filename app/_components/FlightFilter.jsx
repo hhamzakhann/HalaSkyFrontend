@@ -35,11 +35,6 @@ export default function FlightFilter() {
   const [children, setChildren] = useState(0);
   const [selectedTicketType, setSelectedTicketType] = useState("oneWay");
 
-  const [selectedDepartureLocation, setSelectedDepartureLocation] = useState(
-    {}
-  );
-  const [selectedArrivalLocation, setSelectedArrivalLocation] = useState({});
-
   const router = useRouter();
   const MAX_ROWS = 3;
 
@@ -50,7 +45,6 @@ export default function FlightFilter() {
     setValue,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(flightSchema),
     defaultValues: {
       destinationList: [
         {
@@ -74,7 +68,9 @@ export default function FlightFilter() {
     },
   });
 
-  console.log(errors);
+  const DepartureAirport = watch();
+
+  console.log("hi::", DepartureAirport);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -104,8 +100,8 @@ export default function FlightFilter() {
     if (fields.length < MAX_ROWS) {
       append({
         travelDate: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
-        DepartureAirport: "",
-        ArrivalAirport: "",
+        DepartureAirport: {},
+        ArrivalAirport: {},
       });
     }
   };
@@ -124,8 +120,8 @@ export default function FlightFilter() {
       setValue("destinationList", [
         {
           travelDate: format(checkOutDate, "yyyy-MM-dd'T'HH:mm:ss"),
-          DepartureAirport: selectedDepartureLocation.code || "",
-          ArrivalAirport: selectedArrivalLocation.code || "",
+          DepartureAirport: {},
+          ArrivalAirport: {},
         },
       ]);
     } else if (type === "multiCity") {
@@ -136,8 +132,8 @@ export default function FlightFilter() {
       setValue("destinationList", [
         {
           travelDate: format(checkOutDate, "yyyy-MM-dd'T'HH:mm:ss"),
-          DepartureAirport: selectedDepartureLocation.code || "",
-          ArrivalAirport: selectedArrivalLocation.code || "",
+          DepartureAirport: {},
+          ArrivalAirport: {},
         },
       ]);
     }

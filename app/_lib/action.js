@@ -352,7 +352,7 @@ export async function creatPoll({ title, description, question, options }) {
   return data;
 }
 export async function getFlights(requestData) {
-  console.log("FLight REQ DATA:::", requestData);
+  console.log("REQ PAYLOAD:::", requestData);
   const session = await auth();
 
   const myHeaders = new Headers();
@@ -370,6 +370,7 @@ export async function getFlights(requestData) {
 
   const response = await fetch(`${BASE_URL}/flight/get`, requestOptions);
   const data = await response.json();
+
   return data;
 
   // throw new Error("Something went wrong while getting flights");
