@@ -26,6 +26,8 @@ export default function AirlinePriceInfo({ className, flight }) {
     0
   );
 
+  console.log("Total amount", totalAmount);
+
   // convertCurr(currency, undefined, totalAmount);
 
   const userCurrency =

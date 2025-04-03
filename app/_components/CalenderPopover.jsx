@@ -6,7 +6,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { format } from "date-fns";
+import { format, subDays } from "date-fns";
 import calenderIcon from "@/public/calender-icon.svg";
 import { ChevronsUpDown } from "lucide-react";
 import Image from "next/image";
@@ -14,17 +14,13 @@ import Image from "next/image";
 export default function CalenderPopover({
   labelDate = new Date(),
   onChange = () => {},
-  checkInDate,
+  datesDisableTo = new Date(),
+  defaultMonth=new Date()
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(undefined);
 
   const handleSelect = (date) => {
-    console.log(
-      "ON CHANGE VALUE::::",
-      date,
-      new Date(date).toISOString().split(".")[0] + 1
-    );
     onChange(new Date(date).toISOString().split(".")[0]);
     setSelectedDate(date);
     setIsOpen(false);
@@ -56,10 +52,11 @@ export default function CalenderPopover({
       <PopoverContent className="w-auto p-0" align="start">
         <CalendarComponent
           mode="single"
+          defaultMonth={defaultMonth}
           selected={labelDate}
           onSelect={(date) => handleSelect(date)}
           initialFocus
-          disabled={(date) => (checkInDate ? date < checkInDate : false)}
+          disabled={(date) => date < subDays(datesDisableTo, 1)}
         />
       </PopoverContent>
     </Popover>

@@ -7,32 +7,69 @@ import { Slider } from "@/components/ui/slider";
 import { Plane } from "lucide-react";
 import Image from "next/image";
 import planeIcon from "@/public/airplane-icon.svg";
-
-const flightFacilityOptions = [
-  { label: "Extra Luggage", value: 1 },
-  { label: "In Flight Meal", value: 2 },
-  { label: "In Flight Entertainment", value: 3 },
-  { label: "Wifi", value: 4 },
-  { label: "USB Mode", value: 5 },
-];
+import { formatCurr } from "../_lib/utils";
+import Link from "next/link";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useRouter } from "next/navigation";
 
 const transitOptions = [
-  { label: "Direct Flight", value: 1 },
-  { label: "1 Transit", value: 2 },
-  { label: "2+ Transit", value: 3 },
+  { label: "Direct Flight", value: "direct" },
+  { label: "1 Transit", value: "1-transit" },
+  { label: "2+ Transit", value: "2+Transit" },
 ];
 
-export default function Filter() {
+export default function Filter({
+  minimumAmount = "",
+  maximumAmount = "",
+  test,
+}) {
+  const router = useRouter();
+  const [amenities, setAmenities] = useState([]);
+  const [flightType, setFlightType] = useState("");
   const [price, setPrice] = useState(999);
+  const amenitiesList =
+    test?.data?.itineraryGroupDetail.at(0).itinerariesList[0]?.amenities1[0]
+      ?.scheduleDetail[0]?.segments[0]?.amenitiesList;
+
+  const handleCheckboxChange = (value) => {
+    setAmenities((prev) =>
+      prev.includes(value)
+        ? prev.filter((item) => item !== value)
+        : [...prev, value]
+    );
+  };
+
+  const updateURL = (newItems) => {
+    const params = new URLSearchParams();
+
+    // Append each item as a separate query parameter
+    const totalAmenitiesToFilter = amenities.map((item) => item.key).join("-");
+    params.append("amenities", totalAmenitiesToFilter);
+    params.append("flightType", flightType);
+    params.append("priceRange", price);
+
+    // Update the URL
+    router.push(`/flights?${params.toString()}`);
+  };
+
+  console.log("Amenities list:", amenitiesList);
+
   return (
     <div className="space-y-8 ">
       <div>
         <p className="font-normal text-sm text-gray col-span-2 mb-3">
           No. Transit
         </p>
-        <RadioGroup defaultValue="comfortable">
-          {transitOptions.map((option) => (
-            <div className="flex items-center space-x-2 font-normal text-sm text-gray">
+        <RadioGroup
+          defaultValue="direct"
+          onValueChange={(value) => setFlightType(value)}
+        >
+          {transitOptions.map((option, index) => (
+            <div
+              className="flex items-center space-x-2 font-normal text-sm text-gray"
+              key={index}
+            >
               <RadioGroupItem value={option.value} id={option.value} />
               <Label
                 htmlFor={option.value}
@@ -40,9 +77,6 @@ export default function Filter() {
               >
                 {option.label}
               </Label>
-              <span className="font-normal text-sm text-gray w-full text-end">
-                $49.99
-              </span>
             </div>
           ))}
         </RadioGroup>
@@ -52,19 +86,19 @@ export default function Filter() {
           <p className="font-normal text-sm text-gray mb-2">Pricing</p>
           <div className="flex items-center gap-2 mb-8">
             <div className="flex-1 text-center p-3 bg-[#F7FAFA] rounded-lg">
-              $1
+              {formatCurr(minimumAmount, "SAR", "en-US")}
             </div>
             <div>&mdash;</div>
             <div className="flex-1 text-center p-3 bg-[#F7FAFA] rounded-lg">
-              ${price}
+              {formatCurr(maximumAmount, "SAR", "en-US")}
             </div>
           </div>
         </div>
         <div className="relative pt-6 pb-10">
           <Slider
             defaultValue={[1]}
-            min={1}
-            max={100}
+            min={minimumAmount}
+            max={maximumAmount}
             step={1}
             value={[price]}
             onValueChange={(value) => setPrice(value[0])}
@@ -74,36 +108,43 @@ export default function Filter() {
           <div
             className="absolute top-[9px] pointer-events-none min-w-max"
             style={{
-              left: `${price}%`,
+              left: `${100}%`,
               transform: "translateX(-50%)",
             }}
           >
             <Image src={planeIcon} />
             <span className="font-medium absolute top-full -left-[10px] backdrop-blur-md">
-              ${price}
+              {formatCurr(price, "SAR", "en-US")}
             </span>
           </div>
 
           <div className="flex justify-between mt-2">
-            <span className="font-medium">$1</span>
+            <span className="font-medium">
+              {formatCurr(parseInt(minimumAmount), "SAR", "en-US")}
+            </span>
           </div>
         </div>
       </div>
       <div>
-        <RadioGroup defaultValue="comfortable">
-          {flightFacilityOptions.map((option) => (
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value={option.value} id={option.value} />
-              <Label
-                className="font-normal text-sm text-gray"
-                htmlFor={option.value}
-              >
-                {option.label}
-              </Label>
-            </div>
-          ))}
-        </RadioGroup>
+        {amenitiesList.map((item, index) => (
+          <div key={index} className="flex items-center gap-2">
+            <Checkbox
+              id={item}
+              checked={amenities.some((amenity) => amenity.key === item.key)}
+              onCheckedChange={() => handleCheckboxChange(item)}
+            />
+            <Label htmlFor={item} className="font-normal text-sm text-gray">
+              {`${item.key}`.replace(item.key[0], item.key[0].toUpperCase())}
+            </Label>
+          </div>
+        ))}
       </div>
+      <Button
+        className={`bg-[#fccd27] text-black hover:bg-[#e9bd24]  rounded-lg font-medium h-auto w-full`}
+        onClick={updateURL}
+      >
+        Apply
+      </Button>
     </div>
   );
 }

@@ -37,6 +37,7 @@ export default function FlightSecondaryForm({
   destinationList,
   passengerList,
   ticketType,
+  returnDate,
 }) {
   const defaultAdults =
     passengerList?.find((p) => p.type === "ADT")?.total || 1;
@@ -51,9 +52,8 @@ export default function FlightSecondaryForm({
   const DepartureAirport = destinationList?.at(0)?.DepartureAirport;
   const ArrivalAirport = destinationList?.at(0)?.ArrivalAirport;
 
-  console.log(destinationList);
 
-  const { control, handleSubmit, watch, setValue, reset } = useForm({
+  const { control, handleSubmit, watch, setValue, reset, } = useForm({
     defaultValues: {
       destinationList: destinationList
         ? destinationList
@@ -75,9 +75,11 @@ export default function FlightSecondaryForm({
         },
       ],
       ticketType,
-      returnDate: "",
+      returnDate: returnDate ? returnDate :  undefined,
     },
   });
+
+  console.log(watch())
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -223,6 +225,8 @@ export default function FlightSecondaryForm({
               </>
             )}
           </div>
+
+          {/* Departure Airport */}
           <div className="search-flight-item px-3 py-2 md:px-4 md:py-3 flight-from">
             <div className="flex items-center gap-1">
               <img src="/airplane.svg" />
@@ -256,6 +260,8 @@ export default function FlightSecondaryForm({
               )}
             </div>
           </div>
+
+          {/* Arrival Airport */}
           <div className="search-flight-item px-3 py-2 md:px-7 md:py-3">
             <div className="flex items-center gap-1">
               <img src="/landing-airplane-icon.svg" />
@@ -280,6 +286,8 @@ export default function FlightSecondaryForm({
               />
             </div>
           </div>
+
+          {/* Departure Date */}
           <div className="search-flight-item px-3 py-2 md:px-4 md:py-3 space-y-2">
             <div className="flex items-center gap-1">
               <img src="/calender-icon.svg" />
@@ -293,6 +301,7 @@ export default function FlightSecondaryForm({
                   <CalenderPopover
                     onChange={onChange}
                     checkInDate={watch("destinationList")[index]?.travelDate}
+                    labelDate={watch("destinationList")[index]?.travelDate}
                   />
                 )}
               />
@@ -311,7 +320,8 @@ export default function FlightSecondaryForm({
                   render={({ field: { onChange, value } }) => (
                     <CalenderPopover
                       onChange={onChange}
-                      checkInDate={watch("returnDate")}
+                      datesDisableTo={watch("destinationList")[index]?.travelDate}
+                      labelDate={watch("returnDate")}
                     />
                   )}
                 />
