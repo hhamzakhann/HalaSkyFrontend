@@ -4,7 +4,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { format } from "date-fns";
+import { format, subDays } from "date-fns";
 import { ArrowRight, ChevronsUpDown, Minus } from "lucide-react";
 import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
@@ -219,10 +219,7 @@ export default function FlightFilter() {
                   name={`destinationList.${index}.travelDate`}
                   control={control}
                   render={({ field: { onChange, value } }) => (
-                    <CalenderPopover
-                      onChange={onChange}
-                      checkInDate={checkInDate}
-                    />
+                    <CalenderPopover onChange={onChange} />
                   )}
                 />
               </div>
@@ -240,7 +237,17 @@ export default function FlightFilter() {
                     render={({ field: { onChange, value } }) => (
                       <CalenderPopover
                         onChange={onChange}
-                        checkInDate={checkInDate}
+                        datesDisableTo={subDays(
+                          watch("destinationList")[index]?.travelDate,
+                          -1
+                        )}
+                        labelDate={subDays(
+                          watch("destinationList")[index]?.travelDate,
+                          -1
+                        )}
+                        defaultMonth={
+                          watch("destinationList")[index]?.travelDate
+                        }
                       />
                     )}
                   />

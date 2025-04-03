@@ -352,7 +352,7 @@ export async function creatPoll({ title, description, question, options }) {
   return data;
 }
 export async function getFlights(requestData) {
-  console.log("REQ PAYLOAD:::", requestData);
+
   const session = await auth();
 
   const myHeaders = new Headers();

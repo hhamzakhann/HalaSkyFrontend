@@ -46,7 +46,7 @@ export default async function Hotels({ searchParamsData }) {
       <p className="mb-2 text-sm font-medium">{hotels.length} Result Found</p>
       <div className="space-y-8">
         {displayHotels.map((hotel, index) => (
-          <Card varient="medium">
+          <Card varient="medium" key={index}>
             <HotelsCard hotel={hotel} index={index} />
           </Card>
         ))}

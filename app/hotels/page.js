@@ -16,12 +16,8 @@ export const metadata = {
 };
 
 export default async function Page({ searchParams }) {
- 
   const { cityCode, countryCode, checkIn, checkout, adult, children } =
     searchParams;
-
-
-    
 
   return (
     <div className="bg-[#F7FAFA] min-h-[100vh]">
@@ -30,7 +26,7 @@ export default async function Page({ searchParams }) {
           varient="main-nav"
           secondaryNav={
             <SecondaryNav
-              defaultData = {...searchParams}
+              defaultData={{ ...searchParams }}
               defaultDates={{
                 from: checkIn || new Date(),
                 to: checkout || new Date(),
@@ -45,7 +41,7 @@ export default async function Page({ searchParams }) {
           {Object.keys(searchParams).length !== 0 ? (
             <>
               <div className="grid grid-cols-[400px_1fr_450px] fixed left-1/2 -translate-x-[50%] w-[1360px]">
-                <HotelSidebarFilter/>
+                <HotelSidebarFilter />
                 <div></div>
 
                 <div className="">
@@ -61,7 +57,10 @@ export default async function Page({ searchParams }) {
                 </div>
               </div>
               <div className="w-[500px] mx-auto">
-                <Suspense fallback={<HotelCardSkeleton />} key={`${cityCode}-${countryCode}-${adult}-${children}-${checkIn}-${checkout}`}>
+                <Suspense
+                  fallback={<HotelCardSkeleton />}
+                  key={`${cityCode}-${countryCode}-${adult}-${children}-${checkIn}-${checkout}`}
+                >
                   <Hotels searchParamsData={{ ...searchParams }} />
                 </Suspense>
               </div>

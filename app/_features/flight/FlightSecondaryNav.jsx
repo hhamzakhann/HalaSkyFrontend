@@ -11,6 +11,7 @@ export default function FlightSecondaryNav() {
     selectedArrivalLocation,
     selectedDepartureLocation,
     ticketType,
+    returnDate
   } = JSON.parse(formData || "{}");
 
   return (
@@ -22,6 +23,7 @@ export default function FlightSecondaryNav() {
           selectedArrivalLocation={selectedArrivalLocation}
           selectedDepartureLocation={selectedDepartureLocation}
           ticketType={ticketType}
+          returnDate={returnDate}
         />
       </Container>
     </div>

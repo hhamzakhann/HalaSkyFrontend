@@ -5,7 +5,10 @@ import { cookies } from "next/headers";
 
 export const revalidate = 0;
 
-export default async function Flights() {
+export default async function Flights({ searchParams }) {
+  console.log(searchParams);
+  let { amenities, flightType, priceRange } = searchParams;
+  amenities = amenities?.split("-");
   const cookieStore = cookies();
   // const formData = JSON.parse(cookieStore.get("formData")?.value || "{}");
 
@@ -21,7 +24,6 @@ export default async function Flights() {
     travelDate,
     ...rest
   } = formData;
-  console.log("FINAL TEST::", formData, destinationList);
 
   const transformData = {
     destinationList: destinationList.map((dest) => ({
@@ -31,8 +33,6 @@ export default async function Flights() {
     })),
     passengerList: formData.passengerList,
   };
-
-  console.log("TRANSFORM DATA:", transformData);
 
   const updatedDestinationList = [
     ...transformData.destinationList,
@@ -49,7 +49,7 @@ export default async function Flights() {
       : transformData;
 
   let flights = [];
-  console.log("DATA TO LOAD::", dataToLoad);
+
   const resp = await getFlights(dataToLoad);
   console.log("RESP", resp);
   if (resp.status === 429) return <p>{resp.error}</p>;
@@ -61,6 +61,40 @@ export default async function Flights() {
   const itinerariesList = flights?.itineraryGroupDetail?.flatMap(
     (flight) => flight?.itinerariesList
   );
+
+  let displayItinerariesList = [];
+  if (flightType === "direct")
+    displayItinerariesList = itinerariesList.filter((item) =>
+      item.legList.some((item) => item.schedule.length === 1)
+    );
+
+  if (flightType === "1-transit")
+    displayItinerariesList = itinerariesList.filter((item) =>
+      item.legList.some((item) => item.schedule.length === 2)
+    );
+  if (flightType === "2+Transit")
+    displayItinerariesList = itinerariesList.filter((item) =>
+      item.legList.some((item) => item.schedule.length > 2)
+    );
+
+  if (!flightType) displayItinerariesList = itinerariesList;
+
+  // if (true) {
+  //   const test = itinerariesList.map((item) => {
+  //     const amenities = item.amenities1.flatMap((item) => {
+  //       const segments = item.scheduleDetail.flatMap((item) => item.segments);
+  //       return segments.at(0).amenitiesList;
+  //     });
+  //     return amenities;
+  //   });
+  //   console.log("aksjdhflkajhsdlfkj", test[0]);
+  // }
+
+  // console.log(
+  //   "FLITERED ITINEREIES",
+  //   itinerariesList.length,
+  //   displayItinerariesList.length
+  // );
   const flightDescriptions = flights?.itineraryGroupDetail?.flatMap(
     (flight) => flight?.description
   );
@@ -68,14 +102,15 @@ export default async function Flights() {
   return (
     <>
       <p className="mb-4 text-sm font-medium text-slate-400">
-        {itinerariesList?.length} Result Found
+        {displayItinerariesList?.length} Result Found
       </p>
       <div className="space-y-8">
-        {itinerariesList?.map((flight, index) => (
+        {displayItinerariesList?.map((flight, index) => (
           <FlightDetailCard
             index={index}
+            key={index}
             flight={flight}
-            test={flights}
+            test={displayItinerariesList}
             flightDesc={flightDescriptions}
           />
         ))}
