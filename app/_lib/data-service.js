@@ -256,7 +256,7 @@ export async function getHotels({
   const session = await auth();
 
   const myHeaders = new Headers();
-  myHeaders.append("Authorization", `Bearer ${session.user.token}`);
+  // myHeaders.append("Authorization", `Bearer ${session.user.token}`);
   myHeaders.append("Content-Type", "application/json");
 
   const raw = JSON.stringify({

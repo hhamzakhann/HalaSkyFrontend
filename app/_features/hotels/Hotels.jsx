@@ -5,13 +5,11 @@ import Message from "@/app/_components/UI/Message";
 
 export default async function Hotels({ searchParamsData }) {
   const respData = await getHotels(searchParamsData);
+  console.log("resp data", respData);
 
-  console.log(
-    "HOTEL RESP DATA::",
-    respData?.data?.GetHotelAvailRS?.HotelAvailInfos?.HotelAvailInfo
-  );
+  console.log("HOTEL RESP DATA::", respData?.data?.result?.GetHotelAvailRS);
   const hotels =
-    respData?.data?.GetHotelAvailRS?.HotelAvailInfos?.HotelAvailInfo;
+    respData?.data?.result?.GetHotelAvailRS?.HotelAvailInfos?.HotelAvailInfo;
   let displayHotels = [];
 
   const { rating, minPrice, maxPrice } = searchParamsData;
