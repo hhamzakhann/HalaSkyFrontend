@@ -352,11 +352,10 @@ export async function creatPoll({ title, description, question, options }) {
   return data;
 }
 export async function getFlights(requestData) {
-
   const session = await auth();
 
   const myHeaders = new Headers();
-  myHeaders.append("Authorization", `Bearer ${session.user.token}`);
+  // myHeaders.append("Authorization", `Bearer ${session.user.token}`);
   myHeaders.append("Content-Type", "application/json");
 
   const jsonRequest = JSON.stringify(requestData);
