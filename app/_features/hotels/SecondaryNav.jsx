@@ -40,10 +40,11 @@ export default function SecondaryNav({ defaultDates, defaultData }) {
   const [location, setLocation] = useState(undefined);
   useEffect(() => {
     if (defaultData) {
-      setAdults(defaultData.adult ?? 1);
-      setChildren(defaultData.children ?? 2);
+      setAdults(parseInt(defaultData.adult, 10) || 1);
+      setChildren(parseInt(defaultData.children, 10) || 2);
     }
   }, [defaultData]);
+
   console.log("default dates::::", defaultData);
 
   const searchParams = useSearchParams();
@@ -142,12 +143,12 @@ export default function SecondaryNav({ defaultDates, defaultData }) {
                           >
                             -
                           </Button>
-                          <span className="w-8 text-center">{adults}</span>
+                          <span className="w-8 text-center test">{adults}</span>
                           <Button
                             variant="outline"
                             size="icon"
                             className="h-8 w-8"
-                            onClick={() => setAdults(adults + 1)}
+                            onClick={() => setAdults(Math.max(1, adults + 1))}
                           >
                             +
                           </Button>
@@ -166,7 +167,7 @@ export default function SecondaryNav({ defaultDates, defaultData }) {
                           >
                             -
                           </Button>
-                          <span className="w-8 text-center">{children}</span>
+                          <span className="w-8 text-center test">{children}</span>
                           <Button
                             variant="outline"
                             size="icon"
