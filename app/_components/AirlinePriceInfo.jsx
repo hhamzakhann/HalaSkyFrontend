@@ -3,32 +3,20 @@ import { convertCurr } from "../_lib/action";
 import { formatCurr } from "../_lib/utils";
 
 export default function AirlinePriceInfo({ className, flight }) {
-  const { currency, totalAmount } = flight.passengerPriceDetail
-    .flatMap((detail) => detail.passengerList)
-    .reduce(
-      (totalUserfare, currPassenger, indx) => {
-        if (indx === 0)
-          return {
-            ...totalUserfare,
-            currency: currPassenger.passengerTotalFare.currency,
-          };
-        return {
-          ...totalUserfare,
-          totalAmount: currPassenger.passengerTotalFare.totalFare,
-        };
-      },
-      { currency: "", totalAmount: 0 }
-    );
-
-  const amount = flight.passengerPriceDetail.reduce(
-    (totalAmount, currAmount) =>
-      (totalAmount += currAmount.totalFareDetail.totalPrice),
-    0
+  const { currency, totalAmount } = flight.passengerPriceDetail.reduce(
+    (totalUserfare, currPassenger) => {
+      return {
+        ...totalUserfare,
+        currency: currPassenger?.totalFareDetail?.currency,
+        totalAmount:
+          totalUserfare.totalAmount +
+          currPassenger?.totalFareDetail?.totalPrice,
+      };
+    },
+    { currency: "", totalAmount: 0 }
   );
 
-  console.log("Total amount", totalAmount);
-
-  // convertCurr(currency, undefined, totalAmount);
+  console.log("NET AMOUNT", totalAmount);
 
   const userCurrency =
     flight.passengerPriceDetail[0].totalFareDetail.equivalentCurrency;
