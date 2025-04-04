@@ -38,7 +38,12 @@ export default function SecondaryNav({ defaultDates, defaultData }) {
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(2);
   const [location, setLocation] = useState(undefined);
-
+  useEffect(() => {
+    if (defaultData) {
+      setAdults(defaultData.adult ?? 1);
+      setChildren(defaultData.children ?? 2);
+    }
+  }, [defaultData]);
   console.log("default dates::::", defaultData);
 
   const searchParams = useSearchParams();

@@ -57,7 +57,7 @@ export default function Locations({
         const data = await response.json();
 
         if (data.status && Array.isArray(data.data)) {
-          setLocations(data.data); // Update locations with API data
+          setLocations(data.data);
         } else {
           setLocations([]);
         }
@@ -83,10 +83,15 @@ export default function Locations({
     setIsOpen(false);
   };
 
-  // Ensure unique and searchable value for filtering
   const getItemValue = (item) => {
     return `${item.city}-${item.code}`.toLowerCase();
   };
+
+  const getCountryName = (cityCode) =>
+    locations.find((loc) => loc.code === cityCode)?.country || null;
+
+  const getCityName = (cityCode) =>
+    locations.find((loc) => loc.code === cityCode)?.city || null;
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -102,23 +107,21 @@ export default function Locations({
                 {icon}
               </div>
             )}
-            {selectedLocation.city ||
-            selectedLocation.country ||
-            defaultLocationSelected?.city ||
-            defaultLocationSelected?.country ? (
+            {selectedLocation.city || defaultLocationSelectedState ? (
               <div>
                 <div className="text-left">
-                  {selectedLocation.city || defaultLocationSelectedState?.city}
+                  {selectedLocation.city ||
+                    defaultLocationSelectedState?.city ||
+                    getCityName(defaultLocationSelected)}
                 </div>
                 <div className="text-[#808080] text-xs text-left">
                   {selectedLocation.country ||
-                    defaultLocationSelectedState?.country}
+                    defaultLocationSelectedState?.country ||
+                    getCountryName(defaultLocationSelected)}
                 </div>
               </div>
             ) : (
-              <p className={`${error ? "text-red-600" : ""}`}>
-                Select location
-              </p>
+              <p className={`${error ? "text-red-600" : ""}`}>Select location</p>
             )}
           </div>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -135,8 +138,8 @@ export default function Locations({
             <CommandGroup>
               {locations.map((item) => (
                 <CommandItem
-                  key={item.code} // Use code as a stable, unique key
-                  value={getItemValue(item)} // Unique and searchable value
+                  key={item.code}
+                  value={getItemValue(item)}
                   onSelect={() => handleSelection(item)}
                   className="flex justify-between w-full"
                 >
