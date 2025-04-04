@@ -231,7 +231,7 @@ export default function HotelFilter() {
           }&checkIn=${format(checkInDate, "yyyy-MM-dd")}&checkout=${format(
             checkOutDate,
             "yyyy-MM-dd"
-          )}&adult=${adults}&children=${adults}`}
+          )}&adult=${adults}&children=${children}`}
         >
           Search
           <ArrowRight className="ml-2 w-5 h-5" />
