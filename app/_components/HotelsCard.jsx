@@ -32,7 +32,7 @@ export default function HotelsCard({ hotel }) {
   const address = `${AddressLine1}, ${CityName.value}, ${CountryName.value}`;
   return (
     <figure className="relative">
-      <div className="absolute w-[95%] top-4 left-1/2 -translate-x-[50%]   flex items-center justify-between z-10">
+      <div className="absolute w-[95%] top-4 left-1/2 -translate-x-[50%] testt flex items-center justify-between z-10">
         <BadgeHot />
         <div className="space-x-3">
           <ShareButton />
@@ -40,9 +40,10 @@ export default function HotelsCard({ hotel }) {
         </div>
       </div>
       <div className="relative w-full aspect-square">
-        {HotelImageInfo?.ImageItem?.Image?.Url ? (
+        {  HotelImageInfo?.ImageItem?.Image?.Url || HotelInfo?.Logo ? (
           <Image
-            src={HotelImageInfo?.ImageItem?.Image?.Url}
+            src={HotelImageInfo?.ImageItem?.Image?.Url ||
+              HotelInfo?.Logo}
             fill
             className="object-cover"
             alt="Trending hotel image"
