@@ -79,22 +79,13 @@ export default async function Flights({ searchParams }) {
 
   if (!flightType) displayItinerariesList = itinerariesList;
 
-  // if (true) {
-  //   const test = itinerariesList.map((item) => {
-  //     const amenities = item.amenities1.flatMap((item) => {
-  //       const segments = item.scheduleDetail.flatMap((item) => item.segments);
-  //       return segments.at(0).amenitiesList;
-  //     });
-  //     return amenities;
-  //   });
-  //   console.log("aksjdhflkajhsdlfkj", test[0]);
-  // }
+  if (priceRange)
+    displayItinerariesList = itinerariesList?.filter((item) => {
+      return item?.passengerPriceDetail?.some((passPriceDetail) => {
+        return passPriceDetail?.totalFareDetail.totalPrice <= priceRange;
+      });
+    });
 
-  // console.log(
-  //   "FLITERED ITINEREIES",
-  //   itinerariesList.length,
-  //   displayItinerariesList.length
-  // );
   const flightDescriptions = flights?.itineraryGroupDetail?.flatMap(
     (flight) => flight?.description
   );
