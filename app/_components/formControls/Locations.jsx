@@ -91,7 +91,7 @@ export default function Locations({
     locations.find((loc) => loc.code === cityCode)?.country || null;
 
   const getCityName = (cityCode) =>
-    locations.find((loc) => loc.code === cityCode)?.city || null;
+    locations.find((loc) => loc.code === cityCode)?.city || 'Select Location';
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
