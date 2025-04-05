@@ -76,6 +76,23 @@ export default function Locations({
     };
   }, [searchQuery]);
 
+
+  useEffect(() => {
+    if (
+      defaultLocationSelected &&
+      locations.length > 0 &&
+      !selectedLocation?.code
+    ) {
+      const defaultLoc = locations.find(
+        (loc) => loc.code === defaultLocationSelected
+      );
+      if (defaultLoc) {
+        setSelectedLocation(defaultLoc);
+        onLocationSelect(defaultLoc);
+      }
+    }
+  }, [defaultLocationSelected, locations]);
+  
   const handleSelection = function (location) {
     setDefaultLocationSelectedState(undefined);
     setSelectedLocation(location);
@@ -91,7 +108,7 @@ export default function Locations({
     locations.find((loc) => loc.code === cityCode)?.country || null;
 
   const getCityName = (cityCode) =>
-    locations.find((loc) => loc.code === cityCode)?.city || 'Select Location';
+    locations.find((loc) => loc.code === cityCode)?.city || null;
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
