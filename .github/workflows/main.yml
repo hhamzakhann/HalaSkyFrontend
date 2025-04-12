@@ -1,4 +1,4 @@
-name: Deploy to prod-server-1
+name: Deploy to dev-server-1
 
 on:
   push:
@@ -17,9 +17,9 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_GITHUB_AWS }}
 
-      - name: SSH to prod-server-1 
+      - name: SSH to dev-server-1 
         run: |
-          ssh -o StrictHostKeyChecking=no githubactions@${{ secrets.AWS_prod_server_1_IP }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no githubactions@${{ secrets.AWS_DEV_SERVER_1_IP }} << 'EOF'
             cd /var/www/Project1/HalaSkyFrontend
             eval $(ssh-agent -s)
             ssh-add ~/.ssh/SSH_AWS_GITHUB_HALASKYFRONTEND
