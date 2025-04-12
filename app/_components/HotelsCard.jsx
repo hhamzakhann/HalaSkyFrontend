@@ -36,11 +36,11 @@ export default function HotelsCard({ hotel }) {
   } = HotelInfo.LocationInfo;
   const address = `${AddressLine1}, ${CityName.value}, ${CountryName.value}`;
   return (
-    <figure className="relative">
+    <figure className="relative" onClick={sendToServer}>
       <div className="absolute w-[95%] top-4 left-1/2 -translate-x-[50%] testt flex items-center justify-between z-10">
         <BadgeHot />
         <div className="space-x-3">
-          <ShareButton onClick={sendToServer} />
+          <ShareButton />
           {/* <LikeButton /> */}
         </div>
       </div>
