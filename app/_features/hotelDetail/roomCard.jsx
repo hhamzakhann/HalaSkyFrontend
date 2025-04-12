@@ -20,7 +20,7 @@ export const RoomCard = ({ room }) => {
             <span className="text-lg text=[#1A1A1A] font-normal">{`${room.RatePlans.RatePlan[0].ConvertedRateInfo.AverageNightlyRate}`}</span>
             <span className="text-sm text=[#1A1A1A] font-normal">
               {" "}
-              / Pre Day
+              / Per Day
             </span>
           </div>
         </div>
