@@ -33,6 +33,7 @@ export default function StarRating({
   onSetRating = () => {},
   label,
   labelClass = "",
+  isReview = false,
 }) {
   const [rating, setRating] = useState(defaultRating);
   const [tempRating, setTempRating] = useState(0);
@@ -49,6 +50,8 @@ export default function StarRating({
     fontSize: `${size / 1.5}px`,
   };
 
+  console.log(defaultRating);
+
   return (
     <div>
       {label && <p className={labelClass}>{label}</p>}
@@ -59,8 +62,8 @@ export default function StarRating({
               key={i}
               full={tempRating ? tempRating >= i + 1 : rating >= i + 1}
               onRate={() => handleRating(i + 1)}
-              onHoverIn={() => setTempRating(i + 1)}
-              onHoverOut={() => setTempRating(0)}
+              onHoverIn={() => !isReview && setTempRating(i + 1)}
+              onHoverOut={() => !isReview && setTempRating(0)}
               color={color}
               size={size}
             />

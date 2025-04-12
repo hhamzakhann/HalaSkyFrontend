@@ -1,0 +1,31 @@
+export const OverviewTab = ({ selectedTab }) => {
+  return (
+    <>
+      {selectedTab === 1 && (
+        <div className="tabPane py-5">
+          <p className="text-[#1A1A1A] text-sm leading-[26px]">
+            It&apos;s not only writers who can benefit from this free online
+            tool. If you&apos;re a programmer who&apos;s working on a project
+            where blocks of text are needed, this tool can be a great way to get
+            that. It&apos;s a good way to test your programming and that the
+            tool being created is working well. Above are a few examples of how
+            the random paragraph generator can be beneficial. The best way to
+            see if this random paragraph picker will be useful for your intended
+            purposes is to give it a try. Generate a number of paragraphs to see
+            if they are beneficial to your current project.
+          </p>
+          <p className="text-[#1A1A1A] text-sm leading-[26px]">
+            If you do find this paragraph tool useful, please do us a favor and
+            let us know how you&apos;re using it. It&apos;s greatly beneficial
+            for us to know the different ways this tool is being used so we can
+            improve it with updates. This is especially true since there are
+            times when the generators we create get used in completely
+            unanticipated ways from when we initially created them. If you have
+            the time, please send us a quick note on what you&apos;d like to see
+            changed or added to make it better in the future.
+          </p>
+        </div>
+      )}
+    </>
+  );
+};

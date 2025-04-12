@@ -3,30 +3,19 @@
 import ButtonCustom from "@/app/_components/Button";
 import Container from "@/app/_components/Container";
 import {
-  DatePickerWithRange,
-  SelectShadecn,
+  DatePickerWithRange
 } from "@/app/_components/formControls";
 import Locations from "@/app/_components/formControls/Locations";
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import adultsIcon from "@/public/adults-icon.svg";
 import buildingIcon from "@/public/building-icon.svg";
 import calenderIcon from "@/public/calender-icon.svg";
 import { format } from "date-fns";
-import { Check, ChevronsUpDown, Users } from "lucide-react";
+import { ChevronsUpDown } from "lucide-react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -196,7 +185,7 @@ export default function SecondaryNav({ defaultDates, defaultData }) {
               className="w-10 h-10 rounded-full bg-accent"
               onClick={handleSearch}
             >
-              <img src="/search-white-icon.svg" className="w-[80%] h-[80%]" />
+              <img src="/search-white-icon.svg" className="w-[80%] h-[80%]" alt="" />
             </ButtonCustom>
           </div>
         </div>
