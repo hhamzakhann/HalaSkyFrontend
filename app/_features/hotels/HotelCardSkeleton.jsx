@@ -6,7 +6,7 @@ export function HotelCardSkeleton() {
     <div className="flex flex-col gap-3">
       <Skeleton className="h-6 w-3/4 mb-2" />
       {Array.from({ length: 2 }, (_, i) => (
-        <Card className="overflow-hidden border-gray-100">
+        <Card key={i} className="overflow-hidden border-gray-100">
           {/* Image skeleton */}
           <Skeleton className="w-full h-[220px]" />
 

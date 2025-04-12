@@ -1,20 +1,25 @@
+"use client";
+
+import { useHotelStore } from "@/store/useHotelStore";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import HotelPricing from "../_features/hotels/HotelPricing";
 import Rating from "./Rating";
-import LikeButton from "./LikeButton";
 import ShareButton from "./ShareButton";
 import BadgeHot from "./UI/BadgeHot";
-import HotelPricing from "../_features/hotels/HotelPricing";
 
 export default function HotelsCard({ hotel }) {
+  const router = useRouter();
   const { HotelInfo, HotelRateInfo, HotelImageInfo } = hotel;
+  const setHotel = useHotelStore((s) => s.setHotel);
   const {
     RateInfos: { ConvertedRateInfo },
   } = HotelRateInfo;
 
-  // const { ImageItem } = HotelImageInfo;
-  // const {
-  //   Image: { Url },
-  // } = ImageItem;
+  const sendToServer = async () => {
+    setHotel(hotel);
+    router.push(`/hotelDetail`);
+  };
 
   let amountAfterTax = undefined;
   let currencyCode = undefined;
@@ -35,18 +40,18 @@ export default function HotelsCard({ hotel }) {
       <div className="absolute w-[95%] top-4 left-1/2 -translate-x-[50%] testt flex items-center justify-between z-10">
         <BadgeHot />
         <div className="space-x-3">
-          <ShareButton />
+          <ShareButton onClick={sendToServer} />
           {/* <LikeButton /> */}
         </div>
       </div>
       <div className="relative w-full aspect-square">
-        {  HotelImageInfo?.ImageItem?.Image?.Url || HotelInfo?.Logo ? (
+        {HotelImageInfo?.ImageItem?.Image?.Url || HotelInfo?.Logo ? (
           <Image
-            src={HotelImageInfo?.ImageItem?.Image?.Url ||
-              HotelInfo?.Logo}
+            src={HotelImageInfo?.ImageItem?.Image?.Url || HotelInfo?.Logo}
             fill
             className="object-cover"
             alt="Trending hotel image"
+            loading="lazy"
           />
         ) : (
           ""
@@ -57,7 +62,13 @@ export default function HotelsCard({ hotel }) {
           {HotelInfo.HotelName}
         </div>
         <div className="text-sm font-normal text-slate-500 flex items-center gap-2">
-          <img src="/location.svg" />
+          <Image
+            src="/location.svg"
+            alt=""
+            loading="lazy"
+            width={24}
+            height={24}
+          />
           <span className="md:text-xs lg:text-sm">{address}</span>
         </div>
         {amountAfterTax && (

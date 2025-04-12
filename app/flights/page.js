@@ -1,24 +1,16 @@
 import Navigation from "@/app/_components/Navigation";
+import { getFlights } from "@/app/_lib/action";
+import { cookies } from "next/headers";
+import { Suspense } from "react";
 import ButtonCustom from "../_components/Button";
-
 import Card from "../_components/Card";
 import Container from "../_components/Container";
-
-import { FlightDetailCard, FlightSearchList } from "../_features/flight";
-import FlightFacilitiesList from "@/app/_features/flight/FlightFacilitiesList";
-import PricingFilter from "@/app/_components/PricingFilter";
-import TransitList from "@/app/_components/TransitList";
-
-import SidebarFilter from "../_features/flight/SidebarFilter";
-import FlightSecondaryNav from "../_features/flight/FlightSecondaryNav";
-import Filter from "./Filter";
-
-import Flights from "../_features/flight/Flights";
-import { Suspense } from "react";
 import { FlightCardSkeleton } from "../_components/UI/FlightCardSkeleton";
-import { cookies } from "next/headers";
-import { getFlights } from "@/app/_lib/action";
 import Message from "../_components/UI/Message";
+import Flights from "../_features/flight/Flights";
+import FlightSecondaryNav from "../_features/flight/FlightSecondaryNav";
+import SidebarFilter from "../_features/flight/SidebarFilter";
+import Filter from "./Filter";
 
 export const metadata = {
   title: "Flight",

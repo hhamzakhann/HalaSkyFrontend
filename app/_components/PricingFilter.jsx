@@ -26,11 +26,11 @@ export default function PricingFilter({
         <p className="font-normal text-sm text-gray mb-2">Pricing</p>
         <div className="flex items-center gap-2 mb-8">
           <div className="flex-1 text-center p-3 bg-[#F7FAFA] rounded-lg">
-            $1
+            ${price[0]}
           </div>
           <div>&mdash;</div>
           <div className="flex-1 text-center p-3 bg-[#F7FAFA] rounded-lg">
-            ${price}
+            ${price[1]}
           </div>
         </div>
       </div>
@@ -80,14 +80,14 @@ export default function PricingFilter({
           />
 
           <div
-            className="absolute top-[15px] transform -translate-y-1/2 "
+            className="absolute top-[15px] transform -translate-y-1/2 z-20"
             style={{
               left: `calc(${maxValuePercentage}% - 30px)`,
               pointerEvents: "none",
             }}
           >
             <div className="p-1 min-w-max">
-              <Image src={planeIcon} />
+              <Image src={planeIcon} loading="lazy" alt="" />
               <div>${price[1]}</div>
             </div>
           </div>

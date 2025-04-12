@@ -1,15 +1,14 @@
 import Image from "next/image";
 
-import planeGrayIcon from "@/public/plane-gray-icon.svg";
+import { getAirportInfo } from "@/app/_lib/utils";
 import landingPlanIcon from "@/public/landing-plan-icon.svg";
 import luggageBagIcon from "@/public/luggageBag-icon.svg";
+import planeGrayIcon from "@/public/plane-gray-icon.svg";
 import { Tag } from "antd";
-import { getAirportInfo } from "@/app/_lib/utils";
 
-import { format, parse } from "date-fns";
-import { parseISO, differenceInMinutes } from "date-fns";
-import { zonedTimeToUtc } from "date-fns-tz";
-import { utcToZonedTime } from "date-fns-tz";
+import { differenceInMinutes, format, parseISO } from "date-fns";
+// import { zonedTimeToUtc } from "date-fns-tz";
+// import { utcToZonedTime } from "date-fns-tz";
 
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -21,25 +20,25 @@ function formatDate(dateString) {
 //   return format(parsedTime, "HH:mm");
 // }
 
-function formatFlightDurations(flights) {
-  return flights.map((flight) => {
-    const departureTime = parseISO(`2024-01-01T${flight.departure.time}`);
-    const arrivalTime = parseISO(`2024-01-01T${flight.arrival.time}`);
+// function formatFlightDurations(flights) {
+//   return flights.map((flight) => {
+//     const departureTime = parseISO(`2024-01-01T${flight.departure.time}`);
+//     const arrivalTime = parseISO(`2024-01-01T${flight.arrival.time}`);
 
-    // Convert to UTC
-    const utcDeparture = utcToZonedTime(departureTime, "UTC");
-    const utcArrival = utcToZonedTime(arrivalTime, "UTC");
+//     // Convert to UTC
+//     const utcDeparture = utcToZonedTime(departureTime, "UTC");
+//     const utcArrival = utcToZonedTime(arrivalTime, "UTC");
 
-    // Calculate difference in minutes
-    const diffMinutes = Math.abs(differenceInMinutes(utcArrival, utcDeparture));
+//     // Calculate difference in minutes
+//     const diffMinutes = Math.abs(differenceInMinutes(utcArrival, utcDeparture));
 
-    // Convert to hours and minutes
-    const hours = Math.floor(diffMinutes / 60);
-    const minutes = diffMinutes % 60;
+//     // Convert to hours and minutes
+//     const hours = Math.floor(diffMinutes / 60);
+//     const minutes = diffMinutes % 60;
 
-    return { id: flight.id, duration: `${hours}hr ${minutes}min` };
-  });
-}
+//     return { id: flight.id, duration: `${hours}hr ${minutes}min` };
+//   });
+// }
 
 const calcFlightTransists = function ({ schedule }) {
   if (schedule.length === 1) return "One way";

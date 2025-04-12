@@ -1,10 +1,9 @@
 import Navigation from "@/app/_components/Navigation";
 import map1 from "@/public/map-1.png";
 import Image from "next/image";
+import { Suspense } from "react";
 import Container from "../_components/Container";
 import { SelectShadecn } from "../_components/formControls";
-
-import { Suspense } from "react";
 import HotelSidebarFilter from "../_components/HotelSidebarFilter";
 import Message from "../_components/UI/Message";
 import { HotelCardSkeleton } from "../_features/hotels/HotelCardSkeleton";
