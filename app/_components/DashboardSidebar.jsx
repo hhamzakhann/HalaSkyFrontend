@@ -7,7 +7,7 @@ import { handleSignOut } from "@/app/_lib/action";
 
 export default function DashboardSidebar() {
   return (
-    <div className="py-10 px-8 h-h-full bg-[#F5F7F9] space-y-4 divide-y flex flex-col absolute top-0 -left-full bottom-0 h-full z-20 lg:static">
+    <div className="py-10 px-8 h-h-full lightGray space-y-4 divide-y flex flex-col absolute top-0 -left-full bottom-0 h-full z-20 lg:static">
       <div className="flex items-center justify-between">
         <Logo varient="secondary" className="w-2/3" />
       </div>

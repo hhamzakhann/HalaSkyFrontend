@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useTransition } from "react";
 import ButtonCustom from "../Button";
 import { handleSignOut } from "@/app/_lib/action";

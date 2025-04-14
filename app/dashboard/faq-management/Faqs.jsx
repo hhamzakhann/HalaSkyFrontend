@@ -1,6 +1,6 @@
 import { poppinsFont } from "@/app/font";
 import { getFaqs } from "@/app/_lib/data-service";
-import FaqItem from "./faqItem";
+import FaqItem from "./FaqItem";
 
 // Sample FAQ data
 const faqData = [
