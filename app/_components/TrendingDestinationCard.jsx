@@ -1,5 +1,3 @@
-import Image from "next/image";
-import Box from "./Box";
 import Badge from "./UI/Badge";
 import BadgeHot from "./UI/BadgeHot";
 

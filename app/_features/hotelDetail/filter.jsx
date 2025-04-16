@@ -1,3 +1,5 @@
+"use client";
+
 import { DatePickerWithRange } from "@/app/_components/formControls";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,11 +11,15 @@ import { ChevronsUpDown } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
-export const Filter = () => {
+export const Filter = ({ searchParams }) => {
   const [guestsOpen, setGuestsOpen] = useState(false);
-  const [dateRangeSelection, setDateRangeSelection] = useState({});
-  const [adults, setAdults] = useState(1);
-  const [children, setChildren] = useState(2);
+  const [dateRangeSelection, setDateRangeSelection] = useState({
+    from: new Date(searchParams.checkIn).toISOString() || new Date(),
+    to: new Date(searchParams.checkOut).toISOString() || new Date(),
+  });
+  const [adults, setAdults] = useState(searchParams.adult || 1);
+  const [children, setChildren] = useState(searchParams.children || 2);
+
   return (
     <>
       <div className="flex items-center bg-white rounded-2xl shadow-md px-4 py-4">
@@ -28,10 +34,7 @@ export const Filter = () => {
             <span className="font-normal text-xs text-[#949494]">Date</span>
           </div>
           <DatePickerWithRange
-            defaultDate={{
-              from: new Date(),
-              to: new Date(),
-            }}
+            defaultDate={dateRangeSelection}
             onSetDate={(value) => setDateRangeSelection(value)}
           />
         </div>

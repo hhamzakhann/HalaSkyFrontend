@@ -1,9 +1,8 @@
-"use client";
-
-import { useHotelStore } from "@/store/useHotelStore";
+// import { useHotelStore } from "@/store/useHotelStore";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React, { useCallback, useEffect } from "react";
+// import { useRouter } from "next/navigation";
+import { getHotelDetails } from "@/app/_lib/data-service";
+import React from "react";
 import { HiOutlineShare } from "react-icons/hi";
 import { HiOutlineArrowsRightLeft } from "react-icons/hi2";
 import ButtonCustom from "../../_components/Button";
@@ -11,36 +10,26 @@ import Card from "../../_components/Card";
 import Container from "../../_components/Container";
 import LikeButton from "../../_components/LikeButton";
 import Slider from "../../_components/Slider";
-import { RoomDetails } from "./roomDetails";
 import { TabsContainer } from "./tabsContainer";
+import { RoomDetails } from "./roomDetails";
 
-const HotelDetails = () => {
-  const hotel = useHotelStore((s) => s.hotel);
-  const router = useRouter();
+export default async function HotelDetails({ searchParams }) {
+  const resData = await getHotelDetails(searchParams);
 
-  const backToHotel = useCallback(() => {
-    console.log(`111111111111111111`, hotel);
-    if (!hotel) {
-      router.push("/hotels");
-    }
-  }, [hotel, router]);
-
-  useEffect(() => {
-    backToHotel();
-  }, [backToHotel, hotel, router]);
+  const hotel = resData.data.GetHotelDetailsRS.HotelDetailsInfo;
 
   const getHotelAddress = () => {
-    if (hotel) {
-      const {
-        HotelInfo: {
-          LocationInfo: {
-            Address: { AddressLine1, CityName, CountryName },
-          },
-        },
-      } = hotel;
+    // if (hotel) {
+    //   const {
+    //     HotelInfo: {
+    //       LocationInfo: {
+    //         Address: { AddressLine1, CityName, CountryName },
+    //       },
+    //     },
+    //   } = hotel;
 
-      return `${AddressLine1}, ${CityName?.value}, ${CountryName?.value}`;
-    }
+    //   return `${AddressLine1}, ${CityName?.value}, ${CountryName?.value}`;
+    // }
 
     return "";
   };
@@ -48,6 +37,7 @@ const HotelDetails = () => {
   return (
     <React.Fragment>
       <Container className="!p-0">
+        {/* <pre>{JSON.stringify(hotel)}</pre> */}
         <section className="p-0 md:px-4 md:py-3 relative">
           <div className="flex items-center gap-1 py-8">
             <a className="text-sm text-slate-500 align-center" href="/hotels">
@@ -100,10 +90,10 @@ const HotelDetails = () => {
             <Card className="px-7 py-7" varient="medium">
               <div className="flex">
                 <div className="tabs flex-1">
-                  <TabsContainer />
+                  <TabsContainer hotel={hotel} />
                 </div>
                 <div className="rooms flex-1">
-                  <RoomDetails />
+                  <RoomDetails rooms={hotel.HotelRateInfo.Rooms.Room} searchParams={searchParams} />
                 </div>
               </div>
             </Card>
@@ -112,6 +102,4 @@ const HotelDetails = () => {
       </Container>
     </React.Fragment>
   );
-};
-
-export default HotelDetails;
+}

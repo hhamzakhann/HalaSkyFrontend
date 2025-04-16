@@ -2,9 +2,7 @@
 
 import ButtonCustom from "@/app/_components/Button";
 import Container from "@/app/_components/Container";
-import {
-  DatePickerWithRange
-} from "@/app/_components/formControls";
+import { DatePickerWithRange } from "@/app/_components/formControls";
 import Locations from "@/app/_components/formControls/Locations";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +12,7 @@ import {
 } from "@/components/ui/popover";
 import buildingIcon from "@/public/building-icon.svg";
 import calenderIcon from "@/public/calender-icon.svg";
+import { useHotelStore } from "@/store/useHotelStore";
 import { format } from "date-fns";
 import { ChevronsUpDown } from "lucide-react";
 import Image from "next/image";
@@ -27,6 +26,10 @@ export default function SecondaryNav({ defaultDates, defaultData }) {
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(2);
   const [location, setLocation] = useState(undefined);
+  const { setHotelSearchParams } = useHotelStore();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
   useEffect(() => {
     if (defaultData) {
       setAdults(parseInt(defaultData.adult, 10) || 1);
@@ -35,9 +38,6 @@ export default function SecondaryNav({ defaultDates, defaultData }) {
   }, [defaultData]);
 
   console.log("default dates::::", defaultData);
-
-  const searchParams = useSearchParams();
-  const router = useRouter();
 
   const handleSearch = function () {
     const fromDate = new Date(dateRangeSelection?.from);
@@ -49,18 +49,27 @@ export default function SecondaryNav({ defaultDates, defaultData }) {
 
     if (dateRangeSelection?.from && dateRangeSelection?.to) {
       params.set("checkIn", format(fromDate || new Date(), "yyyy-MM-dd"));
-      params.set("checkout", format(toDate || new Date(), "yyyy-MM-dd"));
+      params.set("checkOut", format(toDate || new Date(), "yyyy-MM-dd"));
     }
     params.set("adult", adults);
+    let childAges = Array.from({ length: children }, (_, i) =>
+      Math.floor(Math.random() * (7 - 4) + 4)
+    ).join(",");
     if (children > 0) {
       params.set("children", children);
-      params.set(
-        "childAges",
-        Array.from({ length: children }, (_, i) =>
-          Math.floor(Math.random() * (7 - 4) + 4)
-        ).join(",")
-      );
+      params.set("childAges", childAges);
     }
+
+    setHotelSearchParams({
+      adult: adults,
+      children: children,
+      childAges: childAges,
+      checkIn: format(fromDate || new Date(), "yyyy-MM-dd"),
+      checkOut: format(toDate || new Date(), "yyyy-MM-dd"),
+      cityCode: location.code,
+      countryCode: location.country_code,
+      selectedHotelCode: null,
+    });
 
     router.push(`?${params.toString()}`);
   };
@@ -156,7 +165,9 @@ export default function SecondaryNav({ defaultDates, defaultData }) {
                           >
                             -
                           </Button>
-                          <span className="w-8 text-center test">{children}</span>
+                          <span className="w-8 text-center test">
+                            {children}
+                          </span>
                           <Button
                             variant="outline"
                             size="icon"
@@ -185,7 +196,11 @@ export default function SecondaryNav({ defaultDates, defaultData }) {
               className="w-10 h-10 rounded-full bg-accent"
               onClick={handleSearch}
             >
-              <img src="/search-white-icon.svg" className="w-[80%] h-[80%]" alt="" />
+              <img
+                src="/search-white-icon.svg"
+                className="w-[80%] h-[80%]"
+                alt=""
+              />
             </ButtonCustom>
           </div>
         </div>
@@ -193,6 +208,3 @@ export default function SecondaryNav({ defaultDates, defaultData }) {
     </div>
   );
 }
-
-
-

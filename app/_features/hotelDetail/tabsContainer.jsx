@@ -2,11 +2,11 @@
 
 import ButtonCustom from "@/app/_components/Button";
 import { useState } from "react";
-import { OverviewTab } from "./overviewtab";
 import { FacilitiesTab } from "./facilitiesTab";
+import { OverviewTab } from "./overviewtab";
 import { ReviewTab } from "./reviewTab";
 
-export const TabsContainer = () => {
+export const TabsContainer = ({ hotel }) => {
   const [selectedTab, setSelectedTab] = useState(1);
   return (
     <>
@@ -49,9 +49,9 @@ export const TabsContainer = () => {
         </ButtonCustom>
       </div>
       <div className="tabContent">
-        <OverviewTab selectedTab={selectedTab} />
-        <FacilitiesTab selectedTab={selectedTab} />
-        <ReviewTab selectedTab={selectedTab} />
+        <OverviewTab hotel={hotel} selectedTab={selectedTab} />
+        <FacilitiesTab hotel={hotel} selectedTab={selectedTab} />
+        <ReviewTab hotel={hotel} selectedTab={selectedTab} />
       </div>
     </>
   );

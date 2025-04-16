@@ -1,27 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
-import {
-  ArrowLeft,
-  Upload,
-  Bold,
-  Italic,
-  Underline,
-  Quote,
-  Code,
-  List,
-  ListOrdered,
-  AlignLeft,
-  AlignCenter,
-  AlignRight,
-  Undo,
-  Redo,
-} from "lucide-react";
-import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -32,7 +16,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -41,15 +24,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 // import ReactQuill from "react-quill";
+import { BASE_URL } from "@/constant/constant";
+import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
-
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 import MultiSelect from "../formControls/MultiSelect";
-import { createBlog } from "@/app/_lib/data-service";
-import { useSession } from "next-auth/react";
-import { BASE_URL } from "@/constant/constant";
-import { handleSignOut } from "@/app/_lib/action";
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const blogFormSchema = z.object({
   title: z.string().min(1, "Title is required"),

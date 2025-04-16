@@ -2,7 +2,7 @@
 
 import { useHotelStore } from "@/store/useHotelStore";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import HotelPricing from "../_features/hotels/HotelPricing";
 import Rating from "./Rating";
 import ShareButton from "./ShareButton";
@@ -11,14 +11,20 @@ import BadgeHot from "./UI/BadgeHot";
 export default function HotelsCard({ hotel }) {
   const router = useRouter();
   const { HotelInfo, HotelRateInfo, HotelImageInfo } = hotel;
-  const setHotel = useHotelStore((s) => s.setHotel);
+  const { hotelSearchParams, setHotelSearchParams } = useHotelStore();
+  const searchParams = useSearchParams();
   const {
     RateInfos: { ConvertedRateInfo },
   } = HotelRateInfo;
 
   const sendToServer = async () => {
-    setHotel(hotel);
-    router.push(`/hotelDetail`);
+    setHotelSearchParams({
+      ...hotelSearchParams,
+      selectedHotelCode: hotel?.HotelInfo.HotelCode,
+    });
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set("selectedHotelCode", hotel?.HotelInfo.HotelCode);
+    router.push(`/hotelDetail?${newSearchParams.toString()}`);
   };
 
   let amountAfterTax = undefined;

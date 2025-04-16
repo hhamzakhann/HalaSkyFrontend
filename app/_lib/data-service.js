@@ -248,7 +248,7 @@ export async function getHotels({
   cityCode,
   countryCode,
   checkIn,
-  checkout,
+  checkOut,
   adult,
   children,
   childAges,
@@ -261,7 +261,7 @@ export async function getHotels({
 
   const raw = JSON.stringify({
     checkIn: checkIn,
-    checkOut: checkout,
+    checkOut: checkOut,
     cityCode,
     countryCode,
     rooms: [
@@ -283,6 +283,49 @@ export async function getHotels({
   };
 
   const response = await fetch(`${BASE_URL}/hotel/get`, requestOptions);
+  const data = await response.json();
+  return data;
+}
+
+export async function getHotelDetails({
+  cityCode,
+  countryCode,
+  checkIn,
+  checkOut,
+  adult,
+  children,
+  childAges,
+  selectedHotelCode
+}) {
+  const session = await auth();
+
+  const myHeaders = new Headers();
+  // myHeaders.append("Authorization", `Bearer ${session.user.token}`);
+  myHeaders.append("Content-Type", "application/json");
+
+  const raw = JSON.stringify({
+    checkIn: checkIn,
+    checkOut: checkOut,
+    hotelCode: selectedHotelCode,
+    rooms: [
+      {
+        adults: Number(adult),
+        childrens: Number(children),
+        childAges: Array.from({ length: children }, (_, i) =>
+          Math.floor(Math.random() * (7 - 4) + 4)
+        ).join(","),
+      },
+    ],
+  });
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  const response = await fetch(`${BASE_URL}/hotel/detail`, requestOptions);
   const data = await response.json();
   return data;
 }

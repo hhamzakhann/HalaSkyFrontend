@@ -228,7 +228,7 @@ export default function HotelFilter() {
           // onClick={handleSearch}
           href={`/hotels?cityCode=${location?.code}&countryCode=${
             location?.country_code
-          }&checkIn=${format(checkInDate, "yyyy-MM-dd")}&checkout=${format(
+          }&checkIn=${format(checkInDate, "yyyy-MM-dd")}&checkOut=${format(
             checkOutDate,
             "yyyy-MM-dd"
           )}&adult=${adults}&children=${children}`}

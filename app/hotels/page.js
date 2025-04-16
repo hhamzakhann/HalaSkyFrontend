@@ -15,7 +15,7 @@ export const metadata = {
 };
 
 export default async function Page({ searchParams }) {
-  const { cityCode, countryCode, checkIn, checkout, adult, children } =
+  const { cityCode, countryCode, checkIn, checkOut, adult, children } =
     searchParams;
 
   return (
@@ -28,7 +28,7 @@ export default async function Page({ searchParams }) {
               defaultData={{ ...searchParams }}
               defaultDates={{
                 from: checkIn || new Date(),
-                to: checkout || new Date(),
+                to: checkOut || new Date(),
               }}
             />
           }
@@ -58,7 +58,7 @@ export default async function Page({ searchParams }) {
               <div className="w-[500px] mx-auto">
                 <Suspense
                   fallback={<HotelCardSkeleton />}
-                  key={`${cityCode}-${countryCode}-${adult}-${children}-${checkIn}-${checkout}`}
+                  key={`${cityCode}-${countryCode}-${adult}-${children}-${checkIn}-${checkOut}`}
                 >
                   <Hotels searchParamsData={{ ...searchParams }} />
                 </Suspense>

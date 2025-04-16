@@ -1,8 +1,8 @@
-import StarRating from "@/app/_components/StarRating";
-import { useHotelStore } from "@/store/useHotelStore";
+"use client";
 
-export const ReviewTab = ({ selectedTab }) => {
-  const hotel = useHotelStore((s) => s.hotel);
+import StarRating from "@/app/_components/StarRating";
+
+export const ReviewTab = ({ selectedTab, hotel }) => {
   return (
     <>
       {selectedTab === 3 && (
