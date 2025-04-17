@@ -4,11 +4,10 @@ import ButtonCustom from "@/app/_components/Button";
 import Container from "@/app/_components/Container";
 import { Input } from "@/components/ui/input";
 import { useHotelStore } from "@/store/useHotelStore";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
-import { FaBuilding } from "react-icons/fa";
 import { HotelBookingCard } from "./hotelBookingCard";
+import { PaymentDetailCard } from "./paymentDetailCard";
 
 export const Booking = ({ searchParams }) => {
   const { room, hotel } = useHotelStore();
@@ -49,11 +48,14 @@ export const Booking = ({ searchParams }) => {
                   Payment
                 </div>
               </div>
-              <HotelBookingCard
-                searchParams={searchParams}
-                hotel={hotel}
-                room={room}
-              />
+              {active === 1 ? (
+                <HotelBookingCard
+                  searchParams={searchParams}
+                  hotel={hotel}
+                  room={room}
+                />
+              ) : null}
+              {active === 2 ? <PaymentDetailCard /> : null}
             </div>
             <div className="col-span-2 col-start-7 col-end-9">
               <div className="flex items-cnter w-full pb-4">
@@ -61,38 +63,89 @@ export const Booking = ({ searchParams }) => {
                   Summary
                 </p>
               </div>
-              <div className="rounded-[20px] h-[370px] bg-[#06203B] px-9 py-5">
+              <div
+                className={`rounded-[20px] px-9 py-5 ${
+                  active === 1
+                    ? "bg-[#06203B] h-[370px]"
+                    : "bg-[#FFFFFF] h-[240px]"
+                }`}
+              >
                 <div className="h-full flex flex-col justify-between">
                   <div>
-                    <div>
-                      <Input
-                        className="bg-[#374D62] border-[#F7FAFA1A] rounded-xl text-white h-[41px]"
-                        placeholder="Enter Promo Code"
-                      />
-                    </div>
+                    {active === 1 && (
+                      <div>
+                        <Input
+                          className="bg-[#374D62] border-[#F7FAFA1A] rounded-xl text-white h-[41px]"
+                          placeholder="Enter Promo Code"
+                        />
+                      </div>
+                    )}
                     <div className="flex items-center justify-between mt-5">
-                      <p className="text-white text-xs">Sub Total</p>
-                      <p className="text-white text-xs">$123456</p>
-                    </div>
-                    <div className="flex items-center justify-between mt-5">
-                      <p className="text-white text-xs">Tax</p>
-                      <p className="text-white text-xs">$123456</p>
-                    </div>
-                    <div className="flex items-center justify-between mt-5">
-                      <p className="text-white text-xs">Discount</p>
-                      <p className="text-white text-xs text-[#FF6363]">
-                        $123456
+                      <p
+                        className={`${
+                          active === 1 ? "text-white" : "text-[#808080]"
+                        } text-xs`}
+                      >
+                        Sub Total
+                      </p>
+                      <p
+                        className={`${
+                          active === 1 ? "text-white" : "text-[#808080]"
+                        } text-xs`}
+                      >
+                        {`$ ${room?.RatePlans?.RatePlan[0]?.ConvertedRateInfo?.AmountBeforeTax}`}
                       </p>
                     </div>
                     <div className="flex items-center justify-between mt-5">
-                      <p className="text-white text-sm font-semibold">Total</p>
-                      <p className="text-white text-xs font-semibold">
-                        $123456
+                      <p
+                        className={`${
+                          active === 1 ? "text-white" : "text-[#808080]"
+                        } text-xs`}
+                      >
+                        Tax
+                      </p>
+                      <p
+                        className={`${
+                          active === 1 ? "text-white" : "text-[#808080]"
+                        } text-xs`}
+                      >
+                        {`$ ${room?.RatePlans?.RatePlan[0]?.ConvertedRateInfo?.Taxes?.Amount}`}
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-between mt-5">
+                      <p
+                        className={`${
+                          active === 1 ? "text-white" : "text-[#808080]"
+                        } text-xs`}
+                      >
+                        Discount
+                      </p>
+                      <p className="text-xs text-[#FF6363]">$ 0</p>
+                    </div>
+                    <div className="flex items-center justify-between mt-5">
+                      <p
+                        className={`${
+                          active === 1 ? "text-white" : "text-[#808080]"
+                        } text-sm font-semibold`}
+                      >
+                        Total
+                      </p>
+                      <p
+                        className={`${
+                          active === 1 ? "text-white" : "text-[#808080]"
+                        } text-sm font-semibold`}
+                      >
+                        {`$ ${room?.RatePlans?.RatePlan[0]?.ConvertedRateInfo?.ApproxTotalPrice}`}
                       </p>
                     </div>
                   </div>
                   <div>
-                    <ButtonCustom className="w-full bg-[#FCCD27] text-[#15193C] hover:bg-[#FCCD27]">
+                    <ButtonCustom
+                      className={`w-full bg-[#FCCD27] text-[#15193C] hover:bg-[#FCCD27] ${
+                        active === 2 ? "mt-3" : ""
+                      }`}
+                      onClick={() => setActive(2)}
+                    >
                       Next
                     </ButtonCustom>
                   </div>

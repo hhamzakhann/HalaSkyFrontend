@@ -28,7 +28,7 @@ export const HotelBookingCard = ({ searchParams, hotel }) => {
                   <div>
                     <p className="text-xs text-[#808080]">Hotel Name</p>
                     <p className="text-sm text-[#1A1A1A]">
-                      {hotel.HotelInfo.HotelName}
+                      {hotel?.HotelInfo?.HotelName}
                     </p>
                   </div>
                 </div>
@@ -36,13 +36,13 @@ export const HotelBookingCard = ({ searchParams, hotel }) => {
               <div className="w-full">
                 <p className="text-xs text-[#808080]">Hotel Location</p>
                 <p className="text-sm text-[#1A1A1A]">
-                  {searchParams.selectedHotelAddress}
+                  {searchParams?.selectedHotelAddress}
                 </p>
               </div>
               <div className="w-full">
                 <p className="text-xs text-[#808080]">Check In</p>
                 <p className="text-sm text-[#1A1A1A]">
-                  {new Date(searchParams.checkIn).toLocaleDateString("en-GB", {
+                  {new Date(searchParams?.checkIn).toLocaleDateString("en-GB", {
                     weekday: "short",
                     day: "2-digit",
                     month: "short",
@@ -64,13 +64,13 @@ export const HotelBookingCard = ({ searchParams, hotel }) => {
               <div className="w-full">
                 <p className="text-xs text-[#808080]">Room Type</p>
                 <p className="text-sm text-[#1A1A1A]">
-                  {searchParams.selectedHotelAddress}
+                  {searchParams?.selectedHotelAddress}
                 </p>
               </div>
               <div className="w-full">
                 <p className="text-xs text-[#808080]">Check In</p>
                 <p className="text-sm text-[#1A1A1A]">
-                  {new Date(searchParams.checkOut).toLocaleDateString("en-GB", {
+                  {new Date(searchParams?.checkOut).toLocaleDateString("en-GB", {
                     weekday: "short",
                     day: "2-digit",
                     month: "short",
