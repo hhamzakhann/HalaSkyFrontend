@@ -1,5 +1,4 @@
 import { BASE_URL } from "@/constant/constant";
-import { handleSignOut } from "./action";
 import { auth } from "./auth";
 
 // getting user profile listing.
@@ -327,5 +326,17 @@ export async function getHotelDetails({
 
   const response = await fetch(`${BASE_URL}/hotel/detail`, requestOptions);
   const data = await response.json();
+  return data;
+}
+
+export async function confirmHotelPrice(searchParams, room) {
+  const res = await fetch("/api/confirm-hotel-price", {
+    method: "POST",
+    body: JSON.stringify({ searchParams, room }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await res.json();
   return data;
 }

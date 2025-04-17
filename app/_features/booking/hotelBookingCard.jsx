@@ -3,7 +3,9 @@ import Image from "next/image";
 import { FaBuilding } from "react-icons/fa";
 import { MdOutlineDeleteForever } from "react-icons/md";
 
-export const HotelBookingCard = ({ searchParams, hotel }) => {
+export const HotelBookingCard = ({ searchParams, hotel, room }) => {
+  console.log("1111111111111112221", room);
+  
   return (
     <>
       <div className="bg-white rounded-[20px] mt-5 h-[240px] p-4">
@@ -64,7 +66,7 @@ export const HotelBookingCard = ({ searchParams, hotel }) => {
               <div className="w-full">
                 <p className="text-xs text-[#808080]">Room Type</p>
                 <p className="text-sm text-[#1A1A1A]">
-                  {searchParams?.selectedHotelAddress}
+                  {room?.RoomType}
                 </p>
               </div>
               <div className="w-full">

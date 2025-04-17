@@ -8,17 +8,46 @@ import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { HotelBookingCard } from "./hotelBookingCard";
 import { PaymentDetailCard } from "./paymentDetailCard";
+import { confirmHotelPrice } from "@/app/_lib/data-service";
 
 export const Booking = ({ searchParams }) => {
   const { room, hotel } = useHotelStore();
+  const [subTotal, setSubTotal] = useState("");
+  const [tax, setTax] = useState("");
+  const [total, setTotal] = useState("");
   const [active, setActive] = useState(1);
   const router = useRouter();
 
-  const backToHotel = useCallback(() => {
-    console.log(`222222222222222`, room);
-    console.log(`333333333333333`, hotel);
+  const backToHotel = useCallback(async () => {
+    // console.log(room);
+
     if (!room || !hotel) {
       router.push(`/hotels?${new URLSearchParams(searchParams)}`);
+    } else {
+      const response = await confirmHotelPrice(searchParams, room);
+      if (
+        response?.data?.HotelPriceCheckRS?.ApplicationResults?.status ===
+        "Complete"
+      ) {
+        setSubTotal(
+          response?.data?.HotelPriceCheckRS?.PriceCheckInfo?.HotelRateInfo
+            ?.RateInfos?.RateInfo[0]?.AmountBeforeTax
+        );
+        setTax(
+          Number(
+            response?.data?.HotelPriceCheckRS?.PriceCheckInfo?.HotelRateInfo
+              ?.RateInfos?.RateInfo[0]?.AmountAfterTax
+          ) -
+            Number(
+              response?.data?.HotelPriceCheckRS?.PriceCheckInfo?.HotelRateInfo
+                ?.RateInfos?.RateInfo[0]?.AmountBeforeTax
+            )
+        );
+        setTotal(
+          response?.data?.HotelPriceCheckRS?.PriceCheckInfo?.HotelRateInfo
+            ?.RateInfos?.RateInfo[0]?.AmountAfterTax
+        );
+      }
     }
   }, [room, hotel, router, searchParams]);
 
@@ -93,7 +122,7 @@ export const Booking = ({ searchParams }) => {
                           active === 1 ? "text-white" : "text-[#808080]"
                         } text-xs`}
                       >
-                        {`$ ${room?.RatePlans?.RatePlan[0]?.ConvertedRateInfo?.AmountBeforeTax}`}
+                        {`$ ${subTotal}`}
                       </p>
                     </div>
                     <div className="flex items-center justify-between mt-5">
@@ -109,7 +138,7 @@ export const Booking = ({ searchParams }) => {
                           active === 1 ? "text-white" : "text-[#808080]"
                         } text-xs`}
                       >
-                        {`$ ${room?.RatePlans?.RatePlan[0]?.ConvertedRateInfo?.Taxes?.Amount}`}
+                        {`$ ${tax}`}
                       </p>
                     </div>
                     <div className="flex items-center justify-between mt-5">
@@ -135,19 +164,28 @@ export const Booking = ({ searchParams }) => {
                           active === 1 ? "text-white" : "text-[#808080]"
                         } text-sm font-semibold`}
                       >
-                        {`$ ${room?.RatePlans?.RatePlan[0]?.ConvertedRateInfo?.ApproxTotalPrice}`}
+                        {`$ ${total}`}
                       </p>
                     </div>
                   </div>
                   <div>
-                    <ButtonCustom
-                      className={`w-full bg-[#FCCD27] text-[#15193C] hover:bg-[#FCCD27] ${
-                        active === 2 ? "mt-3" : ""
-                      }`}
-                      onClick={() => setActive(2)}
-                    >
-                      Next
-                    </ButtonCustom>
+                    {active === 1 ? (
+                      <ButtonCustom
+                        className="w-full bg-[#FCCD27] text-[#15193C] hover:bg-[#FCCD27]"
+                        onClick={() => setActive(2)}
+                      >
+                        Next
+                      </ButtonCustom>
+                    ) : (
+                      ""
+                    )}
+                    {active === 2 ? (
+                      <ButtonCustom className="w-full bg-[#FCCD27] text-[#15193C] hover:bg-[#FCCD27] mt-3">
+                        Book Now
+                      </ButtonCustom>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
               </div>
