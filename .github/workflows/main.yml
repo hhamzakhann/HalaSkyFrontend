@@ -1,28 +1,64 @@
-name: Deploy to prod-server-1
+name: Deploy to Staging Server
 
 on:
   push:
     branches:
-      - main
+      - staging
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Set up SSH
+      - name: Set up Node.js (v20)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Build Next.js app
+        run: |
+          npm run build
+
+      - name: Archive build artifacts
+        run: |
+          mkdir -p build-artifacts
+          cp -r .next public package.json package-lock.json build-artifacts/
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: build-artifacts/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build 
+    
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+
+      - name: Set up SSH Agent
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_GITHUB_AWS }}
 
-      - name: SSH to prod-server-1 
+      - name: Copy build files to server
         run: |
-          ssh -o StrictHostKeyChecking=no githubactions@${{ secrets.AWS_prod_server_1_IP }} << 'EOF'
+          scp -r build-artifacts/* githubactions@${{ secrets.AWS_stage_server_1_IP }}:/var/www/Project1/HalaSkyFrontend/ 
+          
+      - name: Restart Next.js on server
+        run: |
+          ssh githubactions@${{ secrets.AWS_stage_server_1_IP }} << 'EOF'
             cd /var/www/Project1/HalaSkyFrontend
-            eval $(ssh-agent -s)
-            ssh-add ~/.ssh/SSH_AWS_GITHUB_HALASKYFRONTEND
-            git stash
-            git pull origin main
+            pm2 restart halasky-frontend
           EOF
