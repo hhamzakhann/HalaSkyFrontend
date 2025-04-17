@@ -11,6 +11,7 @@ type HotelSearchParams = {
   children: number;
   childAges: number[];
   selectedHotelCode: string;
+  selectedHotelAddress: string;
 };
 
 type HotelStore = {

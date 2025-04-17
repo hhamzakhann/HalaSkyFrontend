@@ -1,6 +1,4 @@
-// import { useHotelStore } from "@/store/useHotelStore";
 import Image from "next/image";
-// import { useRouter } from "next/navigation";
 import { getHotelDetails } from "@/app/_lib/data-service";
 import React from "react";
 import { HiOutlineShare } from "react-icons/hi";
@@ -18,26 +16,9 @@ export default async function HotelDetails({ searchParams }) {
 
   const hotel = resData.data.GetHotelDetailsRS.HotelDetailsInfo;
 
-  const getHotelAddress = () => {
-    // if (hotel) {
-    //   const {
-    //     HotelInfo: {
-    //       LocationInfo: {
-    //         Address: { AddressLine1, CityName, CountryName },
-    //       },
-    //     },
-    //   } = hotel;
-
-    //   return `${AddressLine1}, ${CityName?.value}, ${CountryName?.value}`;
-    // }
-
-    return "";
-  };
-
   return (
     <React.Fragment>
       <Container className="!p-0">
-        {/* <pre>{JSON.stringify(hotel)}</pre> */}
         <section className="p-0 md:px-4 md:py-3 relative">
           <div className="flex items-center gap-1 py-8">
             <a className="text-sm text-slate-500 align-center" href="/hotels">
@@ -59,7 +40,7 @@ export default async function HotelDetails({ searchParams }) {
                   height={14}
                 />
                 <span className="text-sm text-slate-500">
-                  {getHotelAddress()}
+                  {searchParams.selectedHotelAddress}
                 </span>
               </div>
             </div>
@@ -93,7 +74,11 @@ export default async function HotelDetails({ searchParams }) {
                   <TabsContainer hotel={hotel} />
                 </div>
                 <div className="rooms flex-1">
-                  <RoomDetails rooms={hotel.HotelRateInfo.Rooms.Room} searchParams={searchParams} />
+                  <RoomDetails
+                    rooms={hotel.HotelRateInfo.Rooms.Room}
+                    hotel={hotel}
+                    searchParams={searchParams}
+                  />
                 </div>
               </div>
             </Card>

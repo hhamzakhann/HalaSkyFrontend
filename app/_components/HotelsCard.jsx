@@ -21,9 +21,11 @@ export default function HotelsCard({ hotel }) {
     setHotelSearchParams({
       ...hotelSearchParams,
       selectedHotelCode: hotel?.HotelInfo.HotelCode,
+      selectedHotelAddress: address
     });
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.set("selectedHotelCode", hotel?.HotelInfo.HotelCode);
+    newSearchParams.set("selectedHotelAddress", address);
     router.push(`/hotelDetail?${newSearchParams.toString()}`);
   };
 

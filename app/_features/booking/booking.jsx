@@ -8,23 +8,23 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { FaBuilding } from "react-icons/fa";
+import { HotelBookingCard } from "./hotelBookingCard";
 
-export const Booking = () => {
-  const room = useHotelStore((s) => s.room);
+export const Booking = ({ searchParams }) => {
+  const { room, hotel } = useHotelStore();
   const [active, setActive] = useState(1);
   const router = useRouter();
 
   const backToHotel = useCallback(() => {
     console.log(`222222222222222`, room);
-    if (!room) {
-      router.push("/hotels");
+    console.log(`333333333333333`, hotel);
+    if (!room || !hotel) {
+      router.push(`/hotels?${new URLSearchParams(searchParams)}`);
     }
-  }, [room, router]);
+  }, [room, hotel, router, searchParams]);
 
   useEffect(() => {
-    if (!room) {
-      router.push("/hotels");
-    }
+    backToHotel();
   }, [backToHotel, room, router]);
 
   return (
@@ -49,47 +49,11 @@ export const Booking = () => {
                   Payment
                 </div>
               </div>
-              <div className="bg-white rounded-[20px] mt-5 h-[240px] p-4">
-                <div className="grid grid-cols-7 h-full w-full gap-5">
-                  <div className="flex flex-col content-center col-span-3 h-full col-start-1 col-end-4">
-                    <Image
-                      src="/trending-image-1.jpg"
-                      className="h-[200px]"
-                      alt=""
-                      loading="lazy"
-                      width={392}
-                      height={10}
-                    />
-                  </div>
-                  <div className="col-span-2 col-start-4 col-end-6">
-                    <div className="flex flex-col justify-center w-full h-full gap-5">
-                      <div className="flex flex-col content-start w-full">
-                        <div className="flex items-center gap-2">
-                          <div className="flex items-center justify-center rounded-3xl bg-[#172B85] text-[#FCCD27] w-[36px] h-[36px]">
-                            <FaBuilding />
-                          </div>
-                          <div>
-                            <p className="text-xs text-[#808080]">Hotel Name</p>
-                            <p className="text-sm text-[#1A1A1A]">Test Hotel</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="w-full">
-                        <p className="text-xs text-[#808080]">Hotel Location</p>
-                        <p className="text-sm text-[#1A1A1A]">Test Hotel</p>
-                      </div>
-                      <div className="w-full">
-                        <p className="text-xs text-[#808080]">Check In</p>
-                        <p className="text-sm text-[#1A1A1A]">Test Hotel</p>
-                        <p className="text-sm text-[#1A1A1A]">Test Hotel</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-span-2 col-start-6 col-end-8">
-                    asdv sfdvs dfvdsfvsdfv sdfvsdf vs fdv
-                  </div>
-                </div>
-              </div>
+              <HotelBookingCard
+                searchParams={searchParams}
+                hotel={hotel}
+                room={room}
+              />
             </div>
             <div className="col-span-2 col-start-7 col-end-9">
               <div className="flex items-cnter w-full pb-4">

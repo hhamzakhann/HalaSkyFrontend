@@ -7,8 +7,8 @@ import { Filter } from "./filter";
 import { Rooms } from "./rooms";
 import { useHotelStore } from "@/store/useHotelStore";
 
-export const RoomDetails = ({ rooms, searchParams }) => {
-  const { room } = useHotelStore();
+export const RoomDetails = ({ rooms, hotel, searchParams }) => {
+  const { room, setHotel } = useHotelStore();
   const router = useRouter();
 
   const goToBooking = () => {
@@ -17,7 +17,8 @@ export const RoomDetails = ({ rooms, searchParams }) => {
       return;
     }
 
-    router.push("/booking");
+    setHotel(hotel)
+    router.push(`/booking?${new URLSearchParams(searchParams)}`);
   };
 
   return (
@@ -26,7 +27,7 @@ export const RoomDetails = ({ rooms, searchParams }) => {
         <div className="h-full bg-[#F7FAFA] rounded-3xl">
           <div className="p-5">
             <Filter searchParams={searchParams} />
-            <p className="text-sm text-[#1A1A1A] pt-5">Select Room</p>
+            <p className="text-sm text-[#1A1/bookingA1A] pt-5">Select Room</p>
             <Rooms rooms={rooms ?? []} />
             <div className="">
               <ButtonCustom
