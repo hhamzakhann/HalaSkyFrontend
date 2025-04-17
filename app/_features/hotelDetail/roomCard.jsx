@@ -30,7 +30,7 @@ export const RoomCard = ({ room }) => {
             </span>
           </div>
         </div>
-        <div className="icons">1</div>
+        <div className="icons"></div>
         <div className="persons">
           <div className="flex flex-col items-end gap-3">
             <PiWarningCircleLight />
