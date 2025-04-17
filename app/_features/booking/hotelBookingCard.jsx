@@ -4,8 +4,6 @@ import { FaBuilding } from "react-icons/fa";
 import { MdOutlineDeleteForever } from "react-icons/md";
 
 export const HotelBookingCard = ({ searchParams, hotel, room }) => {
-  console.log("1111111111111112221", room);
-  
   return (
     <>
       <div className="bg-white rounded-[20px] mt-5 h-[240px] p-4">
