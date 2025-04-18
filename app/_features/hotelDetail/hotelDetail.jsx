@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getHotelDetails } from "@/app/_lib/data-service";
+import { getHotelDetails, getHotelImages } from "@/app/_lib/data-service";
 import React from "react";
 import { HiOutlineShare } from "react-icons/hi";
 import { HiOutlineArrowsRightLeft } from "react-icons/hi2";
@@ -12,9 +12,10 @@ import { TabsContainer } from "./tabsContainer";
 import { RoomDetails } from "./roomDetails";
 
 export default async function HotelDetails({ searchParams }) {
-  const resData = await getHotelDetails(searchParams);
+  const hotelResponseData = await getHotelDetails(searchParams);
+  const hotel = hotelResponseData.data.GetHotelDetailsRS.HotelDetailsInfo;
 
-  const hotel = resData.data.GetHotelDetailsRS.HotelDetailsInfo;
+  const hotelImageData = await getHotelImages(searchParams);
 
   return (
     <React.Fragment>

@@ -340,3 +340,25 @@ export async function confirmHotelPrice(searchParams, room) {
   const data = await res.json();
   return data;
 }
+
+export async function getHotelImages(searchParams) {
+  const session = await auth();
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${session.user.token}`);
+  myHeaders.append("Content-Type", "application/json");
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: JSON.stringify({ hotelCode: searchParams.selectedHotelCode }),
+    redirect: "follow"
+  };
+
+  const response = await fetch(`${BASE_URL}/hotel/images`, requestOptions);
+  const data = await response.json();
+  return data;
+}
