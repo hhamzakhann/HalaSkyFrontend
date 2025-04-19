@@ -362,3 +362,18 @@ export async function getHotelImages(searchParams) {
   const data = await response.json();
   return data;
 }
+
+export async function hotelBookNow(confirmPriceDetails, searchParams, hotel, room, paymentDetail) {
+  const res = await fetch("/api/hotel-booking", {
+    method: "POST",
+    body: JSON.stringify({ confirmPriceDetails, searchParams, hotel, room, paymentDetail }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  console.log('res', res);
+  
+  const data = await res.json();
+  return data;
+}

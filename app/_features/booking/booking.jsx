@@ -8,19 +8,28 @@ import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { HotelBookingCard } from "./hotelBookingCard";
 import { PaymentDetailCard } from "./paymentDetailCard";
-import { confirmHotelPrice } from "@/app/_lib/data-service";
+import { confirmHotelPrice, hotelBookNow } from "@/app/_lib/data-service";
+import Modal from "@/app/_components/Modal";
+import Image from "next/image";
+import pasportImage from "@/public/Group.png";
 
 export const Booking = ({ searchParams }) => {
   const { room, hotel } = useHotelStore();
+  const [confirmPriceDetails, setConfirmPriceDetails] = useState({});
+  const [paymentDetail, setPaymentDetail] = useState();
   const [subTotal, setSubTotal] = useState("");
   const [tax, setTax] = useState("");
   const [total, setTotal] = useState("");
   const [active, setActive] = useState(1);
+  const [openModal, setOpenModal] = useState(false);
   const router = useRouter();
 
-  const backToHotel = useCallback(async () => {
-    // console.log(room);
+  const backToHome = () => {
+    setOpenModal(false);
+    router.push("/hotels");
+  };
 
+  const backToHotel = useCallback(async () => {
     if (!room || !hotel) {
       router.push(`/hotels?${new URLSearchParams(searchParams)}`);
     } else {
@@ -29,6 +38,7 @@ export const Booking = ({ searchParams }) => {
         response?.data?.HotelPriceCheckRS?.ApplicationResults?.status ===
         "Complete"
       ) {
+        setConfirmPriceDetails(response);
         setSubTotal(
           response?.data?.HotelPriceCheckRS?.PriceCheckInfo?.HotelRateInfo
             ?.RateInfos?.RateInfo[0]?.AmountBeforeTax
@@ -54,6 +64,17 @@ export const Booking = ({ searchParams }) => {
   useEffect(() => {
     backToHotel();
   }, [backToHotel, room, router]);
+
+  const bookNow = async () => {
+    await hotelBookNow(
+      confirmPriceDetails,
+      searchParams,
+      hotel,
+      room,
+      paymentDetail
+    );
+    setOpenModal(true);
+  };
 
   return (
     <React.Fragment>
@@ -84,7 +105,12 @@ export const Booking = ({ searchParams }) => {
                   room={room}
                 />
               ) : null}
-              {active === 2 ? <PaymentDetailCard /> : null}
+              {active === 2 ? (
+                <PaymentDetailCard
+                  setPaymentDetail={setPaymentDetail}
+                  paymentDetail={paymentDetail}
+                />
+              ) : null}
             </div>
             <div className="col-span-2 col-start-7 col-end-9">
               <div className="flex items-cnter w-full pb-4">
@@ -180,7 +206,10 @@ export const Booking = ({ searchParams }) => {
                       ""
                     )}
                     {active === 2 ? (
-                      <ButtonCustom className="w-full bg-[#FCCD27] text-[#15193C] hover:bg-[#FCCD27] mt-3">
+                      <ButtonCustom
+                        className="w-full bg-[#FCCD27] text-[#15193C] hover:bg-[#FCCD27] mt-3"
+                        onClick={() => bookNow()}
+                      >
                         Book Now
                       </ButtonCustom>
                     ) : (
@@ -191,6 +220,32 @@ export const Booking = ({ searchParams }) => {
               </div>
             </div>
           </div>
+          <Modal
+            classname="w-[429px] h-[429px]"
+            open={openModal}
+            onCancel={backToHome}
+            footer={null}
+          >
+            <div className="flex flex-col text-center items-center gap-3 w-full py-[50px]">
+              <div>
+                <Image src={pasportImage} alt="" width={128} height={139} />
+              </div>
+              <div>
+                <p className="text-[24px] font-medium">Booking Confirmed!</p>
+              </div>
+              <div>
+                <p className="text-[14px] text-[#808080]">
+                  Thank you for booking with us! Your reservation has been
+                  successfully confirmed.
+                </p>
+              </div>
+              <div>
+                <ButtonCustom onClick={backToHome} className="bg-[#FCCD27] hover:bg-[#FCCD27] text-black w-[329px] h-[41px]">
+                  back to Homepage
+                </ButtonCustom>
+              </div>
+            </div>
+          </Modal>
         </section>
       </Container>
     </React.Fragment>

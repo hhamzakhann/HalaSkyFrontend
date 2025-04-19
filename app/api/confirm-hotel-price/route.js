@@ -10,7 +10,7 @@ export async function POST(req) {
     }
 
     const { searchParams, room } = await req.json();
-    
+
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${session.user.token}`);
     myHeaders.append("Content-Type", "application/json");
